@@ -11,12 +11,20 @@ import classes # user module "classes.py"
 import funcs # functions
 from secondary.dockerimages import images 
 import argParser 
+import scanCoordination
 
-x = argParser.process_cmd_arguments()
+scanType, targetS = argParser.process_cmd_arguments()
 
-arg = sys.argv[1]
 
-target_addr = funcs.nmapDiscoverScan(arg)
+match scanType:
+    case 1:
+        scanCoordination.performScanType1(targetS)
+    case 2:
+        scanCoordination.performScanType2(targetS)
+
+
+
+
 
 for x in target_addr.not_closed_not_filtered_ports():
     match x.num:

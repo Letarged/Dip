@@ -40,4 +40,13 @@ def process_cmd_arguments():
    
     print("arg_list: " + str(arg_list))
     
-    exit()
+    
+    if arg_list:
+        with open(args.file, 'r') as f:
+            targetS = f.read().split()
+    else:
+        targetS = [args.address]
+
+    print(targetS)
+    print(type(targetS))
+    return args.type, targetS
