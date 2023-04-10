@@ -39,4 +39,5 @@ def process_cmd_arguments():
     arg_list =  True if 'file' in vars(args)  else False
    
     print("arg_list: " + str(arg_list))
+    
     exit()
