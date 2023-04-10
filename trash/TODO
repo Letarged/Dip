@@ -1,0 +1,44 @@
+
+### 
+
+
+    # dorobiť všetky nástroje 
+    # primárne dať do BOHVIEAKEJ db proste jsony.. až potom sa jebať stým že ako to sprehladnit
+    #    ono aj tak vacsinou ked si pozmenis cmd argumenty nastroja, potom parser uz nebude fungovat lebo tam pribudnu/odbudnu veci.. ako toto vyrieist?
+
+
+!! gobuster - len DIR mode zatial
+
+Najbližší krok
+
+    Odsledovať si a spísať si všetky úkony, ktoré potrebujem na to, aby so pridal ďalší nástroj do frameworku. 
+        - od vytvorenia a setupnutia docker imagu 
+        
+
+    Skúsiť to držať v nejakej databáze
+    - local? firebase napr? 
+
+    Pridať funckionalitu, že browsvuj dáta, ktoré boli uložené v databázi
+    - NEPREHNAŤ PRÁCU NA DB, ABY TO PEKNE KOMUNIKOVALO A FUNGOVALO.. TO JE ZBYTOČNÉ LEBO POTOM TO BUDE ASI AJ TAK CELÉ INAK. LEN NEJAKÝ PROOF OF KONCEPT ŽE NÁSTROJ VIE JEDNAK VYKONÁVAŤ TESTY A DRUHAK PREHLIADAŤ VECI ULOŽENÉ V DB.. ALE FAKT JEDNODUCHO, AK BY TO NEŠLO, TAK JEBAŤ A VRHNÚŤ SA NA elk stack
+
+    ELK STACK
+###
+
+
+Input validation
+
+Adjust "assist.py/manage_docker_output()" because not every tool has the same xml output as nmap (at first is was designed for nmap)
+
+For shcheck.py is neccessary to make custom function for convertin IP range into list of targets, since it cannot do it itself
+
+Customize options for tools (nmap, shcheck, cewl) - only after adding others
+
+
+Zoskupiť útoky (testy) podľa kategórie? Napríklad keď zistíme, že je niekde HTTPS server, automaticky vieme použiť balíček testov (shcheck, cewl, whatweb a neviem čo všetko ešte)
+
+V tutorialy na SHCHECK (pri používaní -j pre JSON samozrejme):
+   - Aké su možné výstupy? 
+   - Každý kľúč je jedna adresa, ktorá ma za hodnotu výsledok testu pre túto adresu? - áno, najvyššie kľúče v jsonu zodpovedajú každej reachable otestovanej stránke
+   - Čo unreachable targety? - oni asi vobec nejdú do Jsonu - ano presne tak
+
+
