@@ -1,3 +1,0 @@
-# diplomka
-# diplomka
-# Dip

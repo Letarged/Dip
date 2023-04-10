@@ -1,3 +1,0 @@
-
-# Override "entrypoint" and start interactive shell
-    docker run -it --entrypoint /bin/bash dgobuster:v1

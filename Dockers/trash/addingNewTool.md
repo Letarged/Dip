@@ -1,4 +1,0 @@
-1. Vytvoriť docker image s korektným configurákom - teda Dockerfile nastaviť tak, že sa nainštaluje daný tool + mať nastavený entrypoint na spustenie imagu priamo 
-2. Do "dockerimages.py" dopísať dvojicu názvu imagu ("dnmap:v1") & ako sa na to budeme vo frameworku odkazovať 
-3. Vo "funcs.py" dopísať funkciu - toto sa musí asi modifikovať na dopísanie modulu.. dopisovať funkcie do jedného python filu je mimoriane divné a neprofesionálne
-4. Napísať parsovaciu funkciu. Tak aby vracala prijateľný formát.. je otázne čo to znamená. Asi chceme zachovať čo najviac získaných dát, no niektoré určite bude potrebné zahodiť.. lebo budú useless
