@@ -1,0 +1,1 @@
+Pridanie nástroja - nechcem to mať na štýl že musím dopisovať funkciu do existujúceho python súboru. Potreboval by som nejaký skript, ktorý ako keby rožšíri framework na základe toho, že napíšem nejaký rozširujúci súbor 
