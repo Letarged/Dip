@@ -15,7 +15,7 @@ import parsers.nmapSSLparse as nmapSSLparse
 
 
 config = configparser.RawConfigParser()
-config.read('secondary/p.cfg')
+config.read('secondary/conf/p.cfg')
 
 
 def nmapDiscoverScan(target):

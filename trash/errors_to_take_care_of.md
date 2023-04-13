@@ -1,0 +1,1 @@
+ked hodim do programu "https://..daco.cz/" tak to nmap nespracuje, kedze asi nemozem davat protokol (https) na vstup nmapu

@@ -19,7 +19,7 @@ def parse_output(target, output):
     data = ""
     for line in output.logs(stream=True):
         data += line.decode("utf-8")
-
+    print("!!!!!!!!!!!")
     data = json.dumps(xmltodict.parse(data), indent=4)
     jsonStr = json.loads(data)
 
