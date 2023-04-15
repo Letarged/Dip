@@ -29,10 +29,19 @@ def performScanType1(targetS, debug_on):
 
 
 
-
+    if debug_on:
+        for target in list(temporary_dict.keys()):
+            for interestingport in temporary_dict[target].not_closed_not_filtered_ports():
+                print(str(target) + " - " + str(interestingport.num) + " " + str(interestingport.port_service))
+                print(type(interestingport))
+                
     for target in list(temporary_dict.keys()):
         for interestingport in temporary_dict[target].not_closed_not_filtered_ports():
-            if debug_on: print(str(target) + " - " + str(interestingport))
+            match interestingport.port_service:
+                case "https":
+                    gobuster_result = funcs.gobusterScan(temporary_dict[target], interestingport) 
+                    print(gobuster_result)
+
 
 
 def performScanType2(targetS):

@@ -142,10 +142,10 @@ def gobusterScan(target_ip, port):
 
     dckr = docker.from_env()
 
-    service = port.port_service
-    if service == "http":
+    
+    if port.port_service == "http":
         gobuster_target = "http://" + str(target_ip.address)
-    elif service == "https":
+    elif port.port_service == "https":
         gobuster_target = "https://" + str(target_ip.address)
     x = dckr.containers.run(images["gobuster"], 
                             config['Gobuster']['params'] + 
