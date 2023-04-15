@@ -1,1 +1,3 @@
 ked hodim do programu "https://..daco.cz/" tak to nmap nespracuje, kedze asi nemozem davat protokol (https) na vstup nmapu
+
+Z nejakeho dovodu open-ports-discovery hadze chybu pri vstupe 8.8.8.8. Pri nmap-parse konkrétne. Ale zistil som, že problém nie je v tom že je adresa zadaná formou IP adresy, lebo ked zadám IP adresu whiskyprovsechny.cz (31.15.10.85) tak to krásne funguje ako keby som dal na vstup.

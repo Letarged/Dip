@@ -8,6 +8,14 @@ def nmap_output_proccess(jsonStr):
 
     for i in jsonStr["nmaprun"]["host"]["ports"]["port"]:
     # tmp.append({i["@portid"] : i})
+        print(".............")
+        print(".............")
+        print(i)
+        print(".............")
+        print(".............")
+       # print(classes.port(int(i["@portid"]),i["state"]["@state"],i["service"]["@name"] ))
+        #exit()
+
         one_port = classes.port(int(i["@portid"]),i["state"]["@state"],i["service"]["@name"] )
         tmp.append(one_port)
 
@@ -19,7 +27,6 @@ def parse_output(target, output):
     data = ""
     for line in output.logs(stream=True):
         data += line.decode("utf-8")
-    print("!!!!!!!!!!!")
     data = json.dumps(xmltodict.parse(data), indent=4)
     jsonStr = json.loads(data)
 

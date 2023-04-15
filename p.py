@@ -12,6 +12,10 @@ import funcs # functions
 from secondary.dockerimages import images 
 import argParser 
 import scanCoordination
+import time 
+
+start_time = time.time()
+
 
 scanType, targetS = argParser.process_cmd_arguments()
 
@@ -23,8 +27,10 @@ match scanType:
         scanCoordination.performScanType2(targetS)
 
 
+end_time = time.time()
+print("\nDone in " + str("{:.4f}".format(end_time - start_time)) + " seconds.")
 
-
+exit()
 
 for x in target_addr.not_closed_not_filtered_ports():
     match x.num:

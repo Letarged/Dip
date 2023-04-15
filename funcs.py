@@ -18,6 +18,16 @@ config = configparser.RawConfigParser()
 config.read('secondary/conf/p.cfg')
 
 
+
+def nmapOpenPortsDiscoverScan(target, nmap_command):
+    dckr = docker.from_env()
+    x = dckr.containers.run(images["nmap"], " " + nmap_command + " " + target, detach = True)
+    output = dckr.containers.get(x.id)
+    
+    return nmapparse.parse_output(
+        target, output
+    )
+
 def nmapDiscoverScan(target):
 
     #XXX
