@@ -1,6 +1,6 @@
 import argparse
 
-def process_cmd_arguments():
+def process_cmd_arguments(debug_on):
     parser = argparse.ArgumentParser(
                         prog='Scanex v0.1',
                         description='Program for scanning given targets.',
@@ -34,11 +34,11 @@ def process_cmd_arguments():
     #sp_target_as_list = sp.add_parser('-f', '--file', help="Text file containing list of target. Each target on a new line.")
 
     args = parser.parse_args()
-    print(args.type)
+    if debug_on: print(args.type)
 
     arg_list =  True if 'file' in vars(args)  else False
    
-    print("arg_list: " + str(arg_list))
+    if debug_on: print("arg_list: " + str(arg_list))
     
     
     if arg_list:
@@ -47,6 +47,5 @@ def process_cmd_arguments():
     else:
         targetS = [args.address]
 
-    print(targetS)
-    print(type(targetS))
+    if debug_on: print(targetS)
     return args.type, targetS

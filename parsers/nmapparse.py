@@ -3,16 +3,16 @@ import xmltodict
 
 import classes # user-defined module
 
-def nmap_output_proccess(jsonStr):
+def nmap_output_proccess(jsonStr, debug_on):
     tmp = []
-
+    #if debug_on: print(jsonStr)
     for i in jsonStr["nmaprun"]["host"]["ports"]["port"]:
     # tmp.append({i["@portid"] : i})
-        print(".............")
-        print(".............")
-        print(i)
-        print(".............")
-        print(".............")
+     #   if debug_on: print(".............")
+     #   if debug_on: print(".............")
+     #   if debug_on: print(i)
+     #   if debug_on: print(".............")
+     #   if debug_on: print(".............")
        # print(classes.port(int(i["@portid"]),i["state"]["@state"],i["service"]["@name"] ))
         #exit()
 
@@ -23,13 +23,20 @@ def nmap_output_proccess(jsonStr):
 
 # bude sa musieť upraviť, lebo nie všetky nástroje majú xmlko ako nmap
 # update -> už som to osamostatnil, len ešte stále to je ako keby pripravené robiť switch, to už teda netreba
-def parse_output(target, output):
+def parse_output(target, output, debug_on):
+   # for line in output.logs(stream=True):
+        #if debug_on: print(line)
+  #  if debug_on: print("#############") 
+  #  if debug_on: print("#############") 
     data = ""
     for line in output.logs(stream=True):
         data += line.decode("utf-8")
+   # if debug_on: print(data)
+   # if debug_on: print("#############")
+   # if debug_on: print("#############")
     data = json.dumps(xmltodict.parse(data), indent=4)
     jsonStr = json.loads(data)
 
-    tmp = nmap_output_proccess(jsonStr)
+    tmp = nmap_output_proccess(jsonStr, debug_on)
     return classes.ip(target, tmp)
     

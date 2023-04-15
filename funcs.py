@@ -19,13 +19,13 @@ config.read('secondary/conf/p.cfg')
 
 
 
-def nmapOpenPortsDiscoverScan(target, nmap_command):
+def nmapOpenPortsDiscoverScan(target, nmap_command, debug_on):
     dckr = docker.from_env()
     x = dckr.containers.run(images["nmap"], " " + nmap_command + " " + target, detach = True)
     output = dckr.containers.get(x.id)
     
     return nmapparse.parse_output(
-        target, output
+        target, output, debug_on
     )
 
 def nmapDiscoverScan(target):
@@ -57,8 +57,8 @@ def nmapDiscoverScan(target):
 
 def cewlScan(target_ip, port):
     dckr = docker.from_env()
-    print("In cewl: " + str(target_ip.address) + " " + str(port.num) + " " + port.state + " " + port.default_service)
-    service = port.default_service
+    print("In cewl: " + str(target_ip.address) + " " + str(port.num) + " " + port.state + " " + port.port_service)
+    service = port.port_service
     if service == "http":
         cewl_target = "http://" + str(target_ip.address)
     elif service == "https":
@@ -74,7 +74,7 @@ def cewlScan(target_ip, port):
 def shcheckScan(target_ip, port):
     dckr = docker.from_env()
     print("I am SH-check!" + str(port))
-    service = port.default_service
+    service = port.port_service
     if service == "http":
         shcheck_target = "http://" + str(target_ip.address)
     elif service == "https":
@@ -142,7 +142,7 @@ def gobusterScan(target_ip, port):
 
     dckr = docker.from_env()
 
-    service = port.default_service
+    service = port.port_service
     if service == "http":
         gobuster_target = "http://" + str(target_ip.address)
     elif service == "https":

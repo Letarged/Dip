@@ -15,12 +15,12 @@ class PortState(Enum):
 """
 
 class port:
-    def __init__(self, num, state, default_service):
+    def __init__(self, num, state, port_service):
         if not isinstance(num, int):
             raise Exception("Port num must be -int-")
         self.num = num
         self.state = state
-        self.default_service = default_service
+        self.port_service = port_service
         # Default service is always being set according to the nmap (not hardcoded - in case something changes)
         
 

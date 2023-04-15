@@ -14,15 +14,16 @@ import argParser
 import scanCoordination
 import time 
 
+debug_on = True
 start_time = time.time()
 
 
-scanType, targetS = argParser.process_cmd_arguments()
+scanType, targetS = argParser.process_cmd_arguments(debug_on)
 
 
 match scanType:
     case 1:
-        scanCoordination.performScanType1(targetS)
+        scanCoordination.performScanType1(targetS, debug_on)
     case 2:
         scanCoordination.performScanType2(targetS)
 

@@ -5,8 +5,11 @@ settings = configparser.RawConfigParser()
 settings.read('secondary/conf/settings.cfg') 
 
 
-
-def performScanType1(targetS):
+# This is the main function for coordinating type-1-scan
+# It should perform all the steps specified in the confing file, 
+#       one after antoher, adjusting the steps according 
+#       to the results from initial nmap ports discovery
+def performScanType1(targetS, debug_on):
 
     config = configparser.RawConfigParser()
     config.read(settings['Path']['typeoneConf']) 
@@ -17,19 +20,19 @@ def performScanType1(targetS):
     ports_to_command = ports_to_scan \
                         if ports_to_scan[:11] == "--top-ports" \
                         else "-p" + ports_to_scan
-    nmap_command = settings['NmapOutput']['output'] + " " + ports_to_command
+    nmap_command = settings['NmapOutput']['output'] + " " + config['Typeofnmapscan']['nmaptype'] +  " " + ports_to_command
 
     temporary_dict = {}
     for target in targetS:
-        temporary_dict[target] = funcs.nmapOpenPortsDiscoverScan(target, nmap_command)
-        print("Went for " + str(target) + str(temporary_dict[target]))
+        temporary_dict[target] = funcs.nmapOpenPortsDiscoverScan(target, nmap_command, debug_on)
+        if debug_on: print("Went for " + str(target) + str(temporary_dict[target]))
 
 
 
-    print() 
+
     for target in list(temporary_dict.keys()):
         for interestingport in temporary_dict[target].not_closed_not_filtered_ports():
-            print(str(target) + " - " + str(interestingport))
+            if debug_on: print(str(target) + " - " + str(interestingport))
 
 
 def performScanType2(targetS):
