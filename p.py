@@ -14,7 +14,7 @@ import argParser
 import scanCoordination
 import time 
 
-debug_on = True
+debug_on = False
 start_time = time.time()
 
 

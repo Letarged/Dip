@@ -5,6 +5,10 @@ def parse_output(output):
     for line in output.logs(stream=True):
         data += line.decode("utf-8")
     data = data.split("[*]", 1)[0]
+
+    print(data) # XXX
+    exit() # XXX
+
     jsonStr = json.loads(data)
     return jsonStr
 

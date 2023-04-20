@@ -1,5 +1,6 @@
 import funcs
 import configparser
+import secondary.scanCoordinationAssistant as assist
 
 settings = configparser.RawConfigParser()
 settings.read('secondary/conf/settings.cfg') 
@@ -34,14 +35,41 @@ def performScanType1(targetS, debug_on):
             for interestingport in temporary_dict[target].not_closed_not_filtered_ports():
                 print(str(target) + " - " + str(interestingport.num) + " " + str(interestingport.port_service))
                 print(type(interestingport))
-                
+
+
+          
     for target in list(temporary_dict.keys()):
         for interestingport in temporary_dict[target].not_closed_not_filtered_ports():
             match interestingport.port_service:
                 case "https":
-                    gobuster_result = funcs.gobusterScan(temporary_dict[target], interestingport) 
-                    print(gobuster_result)
-
+                        if config['Gobuster'].getboolean('switched_on'):
+                            gobuster_command = assist.craftGobusterCommand(temporary_dict[target], interestingport, config)
+                            gobuster_result = funcs.gobusterScan2(gobuster_command)
+                            # print(gobuster_result)
+                            print("Gobuster : " + str(gobuster_result)[:20])
+                        if config['Whatweb'].getboolean('switched_on'):
+                            whatweb_command = assist.craftWhatwebCommand(temporary_dict[target], interestingport, config, settings['WhatwebOutput']['output'])
+                            whatweb_result=funcs.whatwebScan2(whatweb_command)
+                            # print(whatweb_result)
+                            print("Whatweb : " + str(whatweb_result)[:20])
+                        if config['Nmapssl'].getboolean('switched_on'):
+                            nmapssl_command = assist.craftNmapSSLCommand(temporary_dict[target], interestingport, config, settings['NmapOutput']['output'])
+                            nmapssl_result = funcs.nmapSSLScan2(nmapssl_command) 
+                            # print(nmapssl_result)
+                            print("Nmapssl : " + str(nmapssl_result)[:20])
+                        if config['Cewl'].getboolean('switched_on'):
+                            cewl_command = assist.craftCewlCommand(temporary_dict[target], interestingport, config)
+                            cewl_result = funcs.cewlScan2(cewl_command)
+                            # print(cewl_result)
+                            print("Cewl : " + str(cewl_result)[:20])
+                case "domain":
+                        if config['Dnsrecon'].getboolean('switched_on'):
+                            dnsrecon_command = assist.craftDnsreconCommand(temporary_dict[target], interestingport, config, settings['DnsreconOutput']['output'])
+                            print(dnsrecon_command)
+                            dnsrecon_result = funcs.dnsreconScan2(dnsrecon_command)
+                            # print(gobuster_result)
+                            print("Dnsrecon : " + str(dnsrecon_result)[:20])
+                        
 
 
 def performScanType2(targetS):

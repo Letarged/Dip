@@ -70,6 +70,15 @@ def cewlScan(target_ip, port):
         output
     )
 
+def cewlScan2(command):
+    dckr = docker.from_env()
+    x = dckr.containers.run(images["cewl"], command, detach = True )
+    output = dckr.containers.get(x.id)
+    
+    return cewlparse.parse_output(
+        output
+    )
+
 
 def shcheckScan(target_ip, port):
     dckr = docker.from_env()
@@ -94,6 +103,15 @@ def shcheckScan(target_ip, port):
 def whatwebScan(target):
     dckr = docker.from_env()
     x = dckr.containers.run(images["whatweb"], config['Whatweb']['params'] + " " + target.address, detach = True )
+    output = dckr.containers.get(x.id)
+    
+    return whatwebparse.parse_output(
+        output
+    )
+
+def whatwebScan2(whatweb_command):
+    dckr = docker.from_env()
+    x = dckr.containers.run(images["whatweb"], whatweb_command, detach = True )
     output = dckr.containers.get(x.id)
     
     return whatwebparse.parse_output(
@@ -125,12 +143,36 @@ def dnsreconScan(target):
         output
     )
 
+def dnsreconScan2(command):
+    dckr = docker.from_env()
+    x = dckr.containers.run(
+        images["dnsrecon"], 
+        command,
+        detach = True 
+        )
+    output = dckr.containers.get(x.id)
+    return dnsreconparse.parse_output(
+        output
+    )
+
 
 def nmapSSLScan(target_ip):
     dckr = docker.from_env()
     x = dckr.containers.run(images["nmap"],
                             config["Nmap"]["sslcert"] + " " +
                             target_ip.address,
+                            detach=True
+                            )
+    output = dckr.containers.get(x.id)
+    
+    return nmapSSLparse.parse_output(
+        output)
+
+
+def nmapSSLScan2(command):
+    dckr = docker.from_env()
+    x = dckr.containers.run(images["nmap"],
+                            command,
                             detach=True
                             )
     output = dckr.containers.get(x.id)
@@ -151,6 +193,24 @@ def gobusterScan(target_ip, port):
                             config['Gobuster']['params'] + 
                             " " + " -w " + config['Gobuster']['wordlist'] +
                             " " + " -u " + gobuster_target,
+                            detach = True )
+    
+
+
+    output = dckr.containers.get(x.id)
+   
+
+    return gobusterparse.parse_output(
+        output
+    )
+
+def gobusterScan2(gobuster_command):
+
+    dckr = docker.from_env()
+
+
+    x = dckr.containers.run(images["gobuster"], 
+                            gobuster_command,
                             detach = True )
     
 
