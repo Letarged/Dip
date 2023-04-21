@@ -14,6 +14,7 @@ import argParser
 import scanCoordination
 import time 
 
+
 debug_on = False
 start_time = time.time()
 
@@ -21,12 +22,24 @@ start_time = time.time()
 scanType, targetS = argParser.process_cmd_arguments(debug_on)
 
 
-match scanType:
-    case 1:
-        scanCoordination.performScanType1(targetS, debug_on)
-    case 2:
-        scanCoordination.performScanType2(targetS)
+"""
 
+Different meaning of "scanType" variable:
+
+    targetS == []  ->   scanType determins what's happening AFTER potentional targets are discovered
+    targetS != []  ->   scanType determins wheter we are running scan1 or scan2 on the given targets
+
+"""
+if targetS == []:
+    scanCoordination.performScanType0(scanType, debug_on)
+else:
+    match scanType:
+        case '1':
+            scanCoordination.performScanType1(targetS, debug_on)
+        case '2':
+            scanCoordination.performScanType2(targetS, debug_on)
+        case _:
+            print("Incorrect place in the multiverse.")
 
 end_time = time.time()
 print("\nDone in " + str("{:.4f}".format(end_time - start_time)) + " seconds.")

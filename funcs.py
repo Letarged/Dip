@@ -12,6 +12,7 @@ import parsers.masscanparse as masscanparse
 import parsers.dnsreconparse as dnsreconparse
 import parsers.gobusterparse as gobusterparse
 import parsers.nmapSSLparse as nmapSSLparse
+import parsers.nmapdiscoveryparse as nmapdiscoveryparse
 
 
 config = configparser.RawConfigParser()
@@ -28,30 +29,23 @@ def nmapOpenPortsDiscoverScan(target, nmap_command, debug_on):
         target, output, debug_on
     )
 
-def nmapDiscoverScan(target):
+def nmapDiscoverScan(command, parameter):
 
-    #XXX
-
-    try:
-        config["Nmap"]["possibleports"]
-        possibleports = True
-    except:
-        possibleports = False
-
-    
-
-    #XXX
+ 
 
     dckr = docker.from_env()
-    x = dckr.containers.run(images["nmap"], config['Nmap']['params'] + " " + target, detach = True)
+    x = dckr.containers.run(
+        images["nmap"], 
+        command,
+        detach = True)
 
 
   #  f = open(nmap_file_out, "r+")
   #  data = ""
     output = dckr.containers.get(x.id)
     
-    return nmapparse.parse_output(
-        target, output
+    return nmapdiscoveryparse.parse_output(
+        output, parameter
     )
 
 
@@ -95,6 +89,19 @@ def shcheckScan(target_ip, port):
     x = dckr.containers.run(images["shcheck"], config['Shcheck']['params'] + " " + shcheck_target, detach = True) 
     output = dckr.containers.get(x.id)
     
+    return shcheckparse.parse_output(
+        output
+    )
+
+def shcheckScan2(command):
+    dckr = docker.from_env()
+    
+    x = dckr.containers.run(
+        images["shcheck"], 
+        command,
+        detach = True) 
+    output = dckr.containers.get(x.id)
+
     return shcheckparse.parse_output(
         output
     )

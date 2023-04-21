@@ -21,17 +21,24 @@ def check_ip_or_url(value):
             + 
           :443
 """ 
-def getFullUrl(target, port):
-    if port.port_service == "http":
-        target = "http://" + str(target.address) + ":" + str(port.num)
-    elif port.port_service == "https":
-        target = "https://" + str(target.address) + ":" + str(port.num)
+def getFullUrl(target, port, with_port_suffix):
+    if with_port_suffix:
+        if port.port_service == "http":
+            target = "http://" + str(target.address) + ":" + str(port.num)
+        elif port.port_service == "https":
+            target = "https://" + str(target.address) + ":" + str(port.num)
+    else:
+        if port.port_service == "http":
+            target = "http://" + str(target.address)
+        elif port.port_service == "https":
+            target = "https://" + str(target.address)
+    
     return target
 
 
 
 def craftGobusterCommand(target, port, config):
-    gobuster_target = getFullUrl(target, port)
+    gobuster_target = getFullUrl(target, port,1)
     command = (
                # "dir " + 
                 config['Gobuster']['params'] + 
@@ -44,7 +51,7 @@ def craftGobusterCommand(target, port, config):
     return command
    
 def craftWhatwebCommand(target, port, config, output_format):
-    whatweb_target = getFullUrl(target, port)
+    whatweb_target = getFullUrl(target, port,1)
     command = (
         output_format + 
         " " + 
@@ -73,7 +80,7 @@ def craftNmapSSLCommand(target, port, config, output_format):
     return command
 
 def craftCewlCommand(target, port, config):
-    cewl_target = getFullUrl(target,port)
+    cewl_target = getFullUrl(target,port,1)
     command = (
         config['Cewl']['params'] + 
         " " +
@@ -100,3 +107,29 @@ def craftDnsreconCommand(target, port, config, output_format):
         str(dns_target)
     )
     return command
+
+def craftShcheckCommand(target, port, config, output_format):
+    shcheck_target = getFullUrl(target,port,0)
+    command = (
+        output_format + 
+        " " + 
+        config['Dnsrecon']['params'] + 
+        " -p" + str(port.num) + 
+        " " +
+        shcheck_target
+    )
+    return command
+
+
+
+def craftHostDiscoveryNmapCommand(target, config, output_format):
+    command = (
+            output_format + 
+            " " + 
+            config['TypeOfScan']['type'] + 
+            " " + 
+            target
+
+        )   
+    print(command)
+    return command, config['TypeOfScan']['type']
