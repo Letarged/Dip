@@ -13,4 +13,4 @@ RUN apt update && apt install -y \
 
 ENTRYPOINT [ "gobuster" ]
 
-CMD ["dir"]
+CMD ["--help"]

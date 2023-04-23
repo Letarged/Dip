@@ -5,17 +5,20 @@ import classes # user-defined module
 
 def nmap_output_proccess(jsonStr, debug_on):
     tmp = []
-    #if debug_on: print(jsonStr)
-    for i in jsonStr["nmaprun"]["host"]["ports"]["port"]:
-    # tmp.append({i["@portid"] : i})
-     #   if debug_on: print(".............")
-     #   if debug_on: print(".............")
-     #   if debug_on: print(i)
-     #   if debug_on: print(".............")
-     #   if debug_on: print(".............")
-       # print(classes.port(int(i["@portid"]),i["state"]["@state"],i["service"]["@name"] ))
-        #exit()
+    
+    # if all the scanned ports are closed
+    if "port" not in jsonStr["nmaprun"]["host"]["ports"]:
+      return []
 
+    # in case of exactly 1 open port (we need it to be an array of 1 element, not just that 1 element)
+    if isinstance(jsonStr["nmaprun"]["host"]["ports"]["port"], dict):
+      jsonStr["nmaprun"]["host"]["ports"]["port"] = [jsonStr["nmaprun"]["host"]["ports"]["port"]]
+
+    for i in jsonStr["nmaprun"]["host"]["ports"]["port"]:
+        # if there is no service, it should mean the port is closed
+        if not "service" in i:
+          continue
+ 
         one_port = classes.port(int(i["@portid"]),i["state"]["@state"],i["service"]["@name"] )
         tmp.append(one_port)
 

@@ -1,6 +1,7 @@
 import ipaddress
 from urllib.parse import urlparse
 import socket
+import classes
 
 
 def check_ip_or_url(value):
@@ -38,7 +39,16 @@ def getFullUrl(target, port, with_port_suffix):
 
 
 def craftGobusterCommand(target, port, config):
-    gobuster_target = getFullUrl(target, port,1)
+   # gobuster_target = getFullUrl(target, port,1)
+
+    if check_ip_or_url(target.address) == "ip":
+        tmp_trgt = socket.gethostbyaddr(target.address)[0]
+        
+        x = classes.ip(tmp_trgt, port)
+        gobuster_target = getFullUrl(x, port, 1)
+    elif check_ip_or_url(target.address) == "url":
+        gobuster_target = getFullUrl(target, port, 1)
+
     command = (
                # "dir " + 
                 config['Gobuster']['params'] + 
@@ -48,6 +58,8 @@ def craftGobusterCommand(target, port, config):
                 " -w " + config['Gobuster']['wordlist'] + 
                 " -u " + gobuster_target
     )
+
+    print(command)
     return command
    
 def craftWhatwebCommand(target, port, config, output_format):
@@ -92,7 +104,7 @@ def craftCewlCommand(target, port, config):
 def craftDnsreconCommand(target, port, config, output_format):
 
     if check_ip_or_url(target.address) == "ip":
-        dns_target = socket.gethostbyaddr(target.address)
+        dns_target = socket.gethostbyaddr(target.address)[0]
     elif check_ip_or_url(target.address) == "url":
         dns_target = target.address
 
