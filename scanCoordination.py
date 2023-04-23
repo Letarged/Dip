@@ -99,24 +99,28 @@ def performScanType1(targetS, debug_on):
                             gobuster_result = funcs.gobusterScan2(gobuster_command)
                             # print(gobuster_result)
                             print("Gobuster : " + str(gobuster_result)[:50])
+
                         if config['Whatweb'].getboolean('switched_on'):
                             whatweb_command, params = assist.craftWhatwebCommand(temporary_dict[target], interestingport, config, settings['WhatwebOutput']['output'])
                             whatweb_result=funcs.launchTheScan("whatweb",whatweb_command, params)
                             # print(whatweb_result)
                             print("Whatweb : " + str(whatweb_result)[:50])
+
                         if config['Nmapssl'].getboolean('switched_on'):
                             nmapssl_command = assist.craftNmapSSLCommand(temporary_dict[target], interestingport, config, settings['NmapOutput']['output'])
                             nmapssl_result = funcs.nmapSSLScan2(nmapssl_command) 
                             # print(nmapssl_result)
                             print("Nmapssl : " + str(nmapssl_result)[:50])
+
                         if config['Cewl'].getboolean('switched_on'):
-                            cewl_command = assist.craftCewlCommand(temporary_dict[target], interestingport, config)
-                            cewl_result = funcs.cewlScan2(cewl_command)
+                            cewl_command, params = assist.craftCewlCommand(temporary_dict[target], interestingport, config)
+                            cewl_result = funcs.launchTheScan("cewl", cewl_command, params)
                             # print(cewl_result)
                             print("Cewl : " + str(cewl_result)[:20])
+
                         if config['Shcheck'].getboolean('switched_on'):
-                            shcheck_command = assist.craftShcheckCommand(temporary_dict[target], interestingport, config, settings['ShcheckOutput']['output'])
-                            shcheck_result = funcs.launchTheScan(shcheck_command)
+                            shcheck_command, params = assist.craftShcheckCommand(temporary_dict[target], interestingport, config, settings['ShcheckOutput']['output'])
+                            shcheck_result = funcs.launchTheScan("shcheck", shcheck_command, params)
                             # print(cewl_result)
                             print("Shcheck : " + str(shcheck_result))
                 case "domain":

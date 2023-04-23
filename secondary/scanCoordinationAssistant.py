@@ -96,7 +96,7 @@ def craftCewlCommand(target, port, config):
         cewl_target
 
     )   
-    return command
+    return command, config['Cewl']['params']
 
 def craftDnsreconCommand(target, port, config, output_format):
 
@@ -122,12 +122,12 @@ def craftShcheckCommand(target, port, config, output_format):
     command = (
         output_format + 
         " " + 
-        config['Dnsrecon']['params'] + 
+        config['Shcheck']['params'] + 
         " -p" + str(port.num) + 
         " " +
         shcheck_target
     )
-    return command
+    return command, config['Shcheck']['params']
 
 def craftHostDiscoveryNmapCommand(target, config, output_format):
     command = (

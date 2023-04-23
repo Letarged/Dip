@@ -13,7 +13,7 @@ tools = [
         'tool' : 'cewl',
         'image' : 'dcewl:v1',
         'params' : [''], # no parameters
-        'parser' : 'parsers.cewl.cewlparser.parse_output'
+        'parser' : 'parsers.cewl.cewlparse.parse_output'
     },
     {
         'tool' : 'whatweb',
@@ -22,9 +22,9 @@ tools = [
         'parser' : 'parsers.whatweb.whatwebparse.parse_output_basic'
     },
     {
-        'tool' : 'nmap',
-        'image' : 'dnmap:v1',
-        'params' : ['-sn'],
-        'parser' : ''
+        'tool' : 'shcheck',
+        'image' : 'dshcheck:v1',
+        'params' : [''], # no parameters
+        'parser' : 'parsers.shcheck.shcheckparse.parse_output'
     }
 ]
