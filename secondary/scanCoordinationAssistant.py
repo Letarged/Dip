@@ -5,15 +5,12 @@ import classes
 
 
 def check_ip_or_url(value):
-    parsed = urlparse(value)
-    if parsed.scheme:
+    try:
+        ip = ipaddress.ip_address(value)
+        return "ip"
+    except:
         return "url"
-    else:
-        try:
-            ip = ipaddress.ip_address(value)
-            return "ip"
-        except ValueError:
-            exit("Err")
+
 
 """
          https:// 
@@ -69,14 +66,14 @@ def craftWhatwebCommand(target, port, config, output_format):
         " " + 
         config['Whatweb']['params'] + 
         " " + 
-        config['Whatweb']['aggression'] + 
+   #     config['Whatweb']['aggression'] + 
         " " + 
        # "-p" + str(port.num) + 
         " " +
         whatweb_target
 
     )
-    return command
+    return command, config['Whatweb']['params']
 
 def craftNmapSSLCommand(target, port, config, output_format): 
     command = (
@@ -131,8 +128,6 @@ def craftShcheckCommand(target, port, config, output_format):
         shcheck_target
     )
     return command
-
-
 
 def craftHostDiscoveryNmapCommand(target, config, output_format):
     command = (

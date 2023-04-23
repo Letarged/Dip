@@ -100,8 +100,8 @@ def performScanType1(targetS, debug_on):
                             # print(gobuster_result)
                             print("Gobuster : " + str(gobuster_result)[:50])
                         if config['Whatweb'].getboolean('switched_on'):
-                            whatweb_command = assist.craftWhatwebCommand(temporary_dict[target], interestingport, config, settings['WhatwebOutput']['output'])
-                            whatweb_result=funcs.whatwebScan2(whatweb_command)
+                            whatweb_command, params = assist.craftWhatwebCommand(temporary_dict[target], interestingport, config, settings['WhatwebOutput']['output'])
+                            whatweb_result=funcs.launchTheScan("whatweb",whatweb_command, params)
                             # print(whatweb_result)
                             print("Whatweb : " + str(whatweb_result)[:50])
                         if config['Nmapssl'].getboolean('switched_on'):
@@ -116,7 +116,7 @@ def performScanType1(targetS, debug_on):
                             print("Cewl : " + str(cewl_result)[:20])
                         if config['Shcheck'].getboolean('switched_on'):
                             shcheck_command = assist.craftShcheckCommand(temporary_dict[target], interestingport, config, settings['ShcheckOutput']['output'])
-                            shcheck_result = funcs.shcheckScan2(shcheck_command)
+                            shcheck_result = funcs.launchTheScan(shcheck_command)
                             # print(cewl_result)
                             print("Shcheck : " + str(shcheck_result))
                 case "domain":

@@ -1,21 +1,16 @@
 #!/usr/bin/python3
 
-def not_forbidden(forbidden_list, interface):
-    if len(interface) == 2:
-        if interface in forbidden_list:
-            return False
-    else:
-        if (interface in forbidden_list) or (interface[:(len(interface)-1)] in forbidden_list):
-            return False
-            
-    return True
+from urllib.parse import urlparse
+import ipaddress
+
+def check_ip_or_url(value):
+
+    try:
+        ip = ipaddress.ip_address(value)
+        return "ip"
+    except:
+        return "url"
 
 
-forb = ['lo', 'eth', 'wlan', 'docker']
-
-my_interface = "docker0"
-
-if not_forbidden(forb, my_interface):
-    print("ALLOWED")
-else:
-    print("FORBIDDEN")
+x = "https://whiskeyprovsechny.cz"
+print(check_ip_or_url(x))

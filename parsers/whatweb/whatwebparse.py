@@ -2,7 +2,7 @@ import json
 
 
 
-def parse_output(output):
+def parse_output_basic(output):
     data = ""
     for line in output.logs(stream=True):
         data += line.decode("utf-8")
@@ -19,3 +19,4 @@ def parse_output(output):
    # print(jsonStr[1]["target"])
     
     return jsonStr
+

@@ -1,22 +1,54 @@
 import docker # for docker images and containers managment
 import configparser # for parsing the configuration file
 from ftplib import FTP
+import importlib
 
 from secondary.dockerimages import images
+from secondary.dockerimages import tools
 
-import parsers.nmapparse as nmapparse
-import parsers.shcheckparse as shcheckparse
-import parsers.cewlparse as cewlparse
-import parsers.whatwebparse as whatwebparse
-import parsers.masscanparse as masscanparse
-import parsers.dnsreconparse as dnsreconparse
-import parsers.gobusterparse as gobusterparse
-import parsers.nmapSSLparse as nmapSSLparse
-import parsers.nmapdiscoveryparse as nmapdiscoveryparse
+import parsers.nmap.nmapparse as nmapparse
+import parsers.shcheck.shcheckparse as shcheckparse
+import parsers.cewl.cewlparse as cewlparse
+#import parsers.whatweb.whatwebparse_basic as whatwebparse_basic
+import parsers.masscan.masscanparse as masscanparse
+import parsers.dnsrecon.dnsreconparse as dnsreconparse
+import parsers.gobuster.gobusterparse as gobusterparse
+import parsers.nmap.nmapSSLparse as nmapSSLparse
+import parsers.nmap.nmapdiscoveryparse as nmapdiscoveryparse
 
 
 config = configparser.RawConfigParser()
 config.read('secondary/conf/p.cfg')
+
+def launchTheScan (tool, command, param):
+    parser, img = getParserAndImage(tool, param)
+    path_of_parser, func_in_parser = divideParserField(parser)
+    correctModule = importlib.import_module(path_of_parser)
+    dckr = docker.from_env()
+    x = dckr.containers.run(img, command, detach = True )
+    output = dckr.containers.get(x.id)
+    
+    return getattr(correctModule, func_in_parser)(output)
+
+
+
+# divide 'parser' field from the mapping function
+# to the module path and to the fuction insied it
+def divideParserField(txt):
+    path = txt.rsplit(".",1)[0]
+    func = txt.rsplit(".",1)[1]
+    return path, func
+
+def getParserAndImage(tool, param):
+    for record in tools:
+        if record['tool'] == tool and \
+            param in record['params']:
+            return record['parser'], record['image']
+
+    exit("Error: not valid tool")
+
+
+
 
 
 
@@ -46,31 +78,6 @@ def nmapDiscoverScan(command, parameter):
     
     return nmapdiscoveryparse.parse_output(
         output, parameter
-    )
-
-
-def cewlScan(target_ip, port):
-    dckr = docker.from_env()
-    print("In cewl: " + str(target_ip.address) + " " + str(port.num) + " " + port.state + " " + port.port_service)
-    service = port.port_service
-    if service == "http":
-        cewl_target = "http://" + str(target_ip.address)
-    elif service == "https":
-        cewl_target = "https://" + str(target_ip.address )
-        print(cewl_target)
-    x = dckr.containers.run(images["cewl"], config['Cewl']['params'] + " " + cewl_target, detach = True) 
-    output = dckr.containers.get(x.id)
-    return cewlparse.parse_output(
-        output
-    )
-
-def cewlScan2(command):
-    dckr = docker.from_env()
-    x = dckr.containers.run(images["cewl"], command, detach = True )
-    output = dckr.containers.get(x.id)
-    
-    return cewlparse.parse_output(
-        output
     )
 
 
@@ -106,25 +113,18 @@ def shcheckScan2(command):
         output
     )
 
-
 def whatwebScan(target):
     dckr = docker.from_env()
     x = dckr.containers.run(images["whatweb"], config['Whatweb']['params'] + " " + target.address, detach = True )
     output = dckr.containers.get(x.id)
     
-    return whatwebparse.parse_output(
+    return whatwebparse_basic.parse_output(
         output
     )
 
-def whatwebScan2(whatweb_command):
-    dckr = docker.from_env()
-    x = dckr.containers.run(images["whatweb"], whatweb_command, detach = True )
-    output = dckr.containers.get(x.id)
-    
-    return whatwebparse.parse_output(
-        output
-    )
-
+def whatwebScan2(whatweb_command, param):
+    tool = "whatweb"
+    return launchTheScan(tool,whatweb_command, param)
 
 # Masscan potrebuje porty, v configuraku je zatial top 10
 def masscanScan(target):
