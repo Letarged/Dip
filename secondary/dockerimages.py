@@ -26,5 +26,24 @@ tools = [
         'image' : 'dshcheck:v1',
         'params' : [''], # no parameters
         'parser' : 'parsers.shcheck.shcheckparse.parse_output'
+    },
+    {
+        'tool' : 'nmap',
+        'image' : 'dnmap:v1',
+        'params' : ['-sn'], # ICMP Echo Request scan
+        'parser' : 'parsers.nmap.nmapdiscoveryparse.parse_output'
+    },
+    {
+        'tool' : 'nmap',
+        'image' : 'dnmap:v1',
+        'params' : ['-sS'],
+        'parser' : 'parsers.nmap.nmapparse.parse_output'
+    },
+    {
+        'tool' : 'nmap',
+        'image' : 'dnmap:v1',
+        'params' : ['--script ssl-cert'],
+        'parser' : 'parsers.nmap.nmapSSLparse.parse_output'
     }
+    
 ]

@@ -3,7 +3,8 @@ import xmltodict
 
 import classes # user-defined module
 
-def nmap_output_proccess(jsonStr, debug_on):
+def nmap_output_proccess(jsonStr):
+    target_ip_address = jsonStr["nmaprun"]["host"]["address"]["@addr"]
     tmp = []
     
     # if all the scanned ports are closed
@@ -22,11 +23,11 @@ def nmap_output_proccess(jsonStr, debug_on):
         one_port = classes.port(int(i["@portid"]),i["state"]["@state"],i["service"]["@name"] )
         tmp.append(one_port)
 
-    return tmp
+    return tmp ,target_ip_address
 
 # bude sa musieť upraviť, lebo nie všetky nástroje majú xmlko ako nmap
 # update -> už som to osamostatnil, len ešte stále to je ako keby pripravené robiť switch, to už teda netreba
-def parse_output(target, output, debug_on):
+def parse_output(output):
    # for line in output.logs(stream=True):
         #if debug_on: print(line)
   #  if debug_on: print("#############") 
@@ -39,7 +40,6 @@ def parse_output(target, output, debug_on):
    # if debug_on: print("#############")
     data = json.dumps(xmltodict.parse(data), indent=4)
     jsonStr = json.loads(data)
-
-    tmp = nmap_output_proccess(jsonStr, debug_on)
-    return classes.ip(target, tmp)
+    tmp, target_ip = nmap_output_proccess(jsonStr)
+    return classes.ip(target_ip, tmp)
     

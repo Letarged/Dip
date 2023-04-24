@@ -85,8 +85,9 @@ def craftNmapSSLCommand(target, port, config, output_format):
         " " +
         str(target.address)
 
-    )   
-    return command
+    )  
+    
+    return command, config['Nmapssl']['params']
 
 def craftCewlCommand(target, port, config):
     cewl_target = getFullUrl(target,port,1)
@@ -130,13 +131,39 @@ def craftShcheckCommand(target, port, config, output_format):
     return command, config['Shcheck']['params']
 
 def craftHostDiscoveryNmapCommand(target, config, output_format):
+
     command = (
             output_format + 
             " " + 
-            config['TypeOfScan']['type'] + 
+            config['TypeOfScan']['params'] + 
             " " + 
             target
 
         )   
     print(command)
-    return command, config['TypeOfScan']['type']
+    return command, config['TypeOfScan']['params']
+
+
+
+
+def craftNmapCommand(target, config, output_format):
+    ports_to_scan = config['Ports']['portslist']
+
+    # if "--top-ports 10" is specified, leave it like that
+    # but if "21,22,80,443,8080" is specified, we need to add "-p" prefix for nmap
+    ports_to_command = ports_to_scan \
+                        if ports_to_scan[:11] == "--top-ports" \
+                        else "-p" + ports_to_scan
+    nmap_command = (
+         output_format + 
+         " " + 
+         config['Nmap']['params'] +  
+         " " + 
+         ports_to_command +
+         " " + 
+         target
+         
+         
+         )
+
+    return nmap_command, config['Nmap']['params']

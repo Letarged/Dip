@@ -44,7 +44,7 @@ def parse_output(output):
     for line in output.logs(stream=True):
         data += line.decode("utf-8")
 
-
+    
     data = json.dumps(xmltodict.parse(data), indent=4)
     jsonStr = json.loads(data)
 

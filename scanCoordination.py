@@ -65,28 +65,19 @@ def performScanType1(targetS, debug_on):
 
     config = configparser.RawConfigParser()
     config.read(settings['Path']['typeoneConf']) 
-    ports_to_scan = config['Ports']['portslist']
-
-    # if "--top-ports 10" is specified, leave it like that
-    # but if "21,22,80,443,8080" is specified, we need to add "-p" prefix for nmap
-    ports_to_command = ports_to_scan \
-                        if ports_to_scan[:11] == "--top-ports" \
-                        else "-p" + ports_to_scan
-    nmap_command = settings['NmapOutput']['output'] + " " + config['Typeofnmapscan']['nmaptype'] +  " " + ports_to_command
-
+    
     temporary_dict = {}
     for target in targetS:
-        temporary_dict[target] = funcs.nmapOpenPortsDiscoverScan(target, nmap_command, debug_on)
-        if debug_on: print("Went for " + str(target) + str(temporary_dict[target]))
+        nmap_command, param = assist.craftNmapCommand(target, config, settings['NmapOutput']['output'])
+        temporary_dict[target] = funcs.launchTheScan("nmap", nmap_command, param)
+        #if debug_on: print("Went for " + str(target) + str(temporary_dict[target]))
 
 
-
-    if debug_on:
-        for target in list(temporary_dict.keys()):
-            for interestingport in temporary_dict[target].not_closed_not_filtered_ports():
-                print(str(target) + " - " + str(interestingport.num) + " " + str(interestingport.port_service))
-                print(type(interestingport))
-
+    
+    for target in list(temporary_dict.keys()):
+        for interestingport in temporary_dict[target].not_closed_not_filtered_ports():
+            print(str(target) + " - " + str(interestingport.num) + " " + str(interestingport.port_service))
+    
 
           
     for target in list(temporary_dict.keys()):
@@ -107,8 +98,8 @@ def performScanType1(targetS, debug_on):
                             print("Whatweb : " + str(whatweb_result)[:50])
 
                         if config['Nmapssl'].getboolean('switched_on'):
-                            nmapssl_command = assist.craftNmapSSLCommand(temporary_dict[target], interestingport, config, settings['NmapOutput']['output'])
-                            nmapssl_result = funcs.nmapSSLScan2(nmapssl_command) 
+                            nmapssl_command, params = assist.craftNmapSSLCommand(temporary_dict[target], interestingport, config, settings['NmapOutput']['output'])
+                            nmapssl_result = funcs.launchTheScan("nmap", nmapssl_command, params) 
                             # print(nmapssl_result)
                             print("Nmapssl : " + str(nmapssl_result)[:50])
 
@@ -151,11 +142,9 @@ def performScanType0(scan_after_discovery, debug_on):
 
     for target in potentional_targets:
         discovery_command, parameter = assist.craftHostDiscoveryNmapCommand(target, config,settings['NmapOutput']['output'])
-        discovery_result = funcs.nmapDiscoverScan(discovery_command, parameter)
+        discovery_result = funcs.launchTheScan("nmap", discovery_command, parameter)
         print(discovery_result)
-        print(scan_after_discovery)
-        print(type(scan_after_discovery))
-        
+
     match scan_after_discovery:
         case '0':
             pass

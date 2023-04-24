@@ -61,24 +61,6 @@ def nmapOpenPortsDiscoverScan(target, nmap_command, debug_on):
         target, output, debug_on
     )
 
-def nmapDiscoverScan(command, parameter):
-
- 
-
-    dckr = docker.from_env()
-    x = dckr.containers.run(
-        images["nmap"], 
-        command,
-        detach = True)
-
-
-  #  f = open(nmap_file_out, "r+")
-  #  data = ""
-    output = dckr.containers.get(x.id)
-    
-    return nmapdiscoveryparse.parse_output(
-        output, parameter
-    )
 
 
 def shcheckScan(target_ip, port):
@@ -176,16 +158,6 @@ def nmapSSLScan(target_ip):
         output)
 
 
-def nmapSSLScan2(command):
-    dckr = docker.from_env()
-    x = dckr.containers.run(images["nmap"],
-                            command,
-                            detach=True
-                            )
-    output = dckr.containers.get(x.id)
-    
-    return nmapSSLparse.parse_output(
-        output)
 
 def gobusterScan(target_ip, port):
 

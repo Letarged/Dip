@@ -16,19 +16,13 @@ def nmap_output_proccess_sn(jsonStr):
   
 
 
-def parse_output(output, parameter):
-    data = ""
-    
-    for line in output.logs(stream=True):
-        data += line.decode("utf-8")
+def parse_output(output):
+  data = ""
   
-    data = json.dumps(xmltodict.parse(data), indent=4)
-    jsonStr = json.loads(data)
+  for line in output.logs(stream=True):
+      data += line.decode("utf-8")
 
-    match parameter:
-      case '-sn':
-        tmp = nmap_output_proccess_sn(jsonStr)
-      case _:
-        exit("Parser for \"" + str(parameter) + "\" is missing.")
-    return tmp
+  data = json.dumps(xmltodict.parse(data), indent=4)
+  jsonStr = json.loads(data)
+  return nmap_output_proccess_sn(jsonStr)
     
