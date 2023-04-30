@@ -8,6 +8,7 @@ images = {
     'gobuster' : 'dgobuster:v1'
 }
 
+# ANY
 tools = [
     {
         'tool' : 'cewl',
@@ -44,6 +45,24 @@ tools = [
         'image' : 'dnmap:v1',
         'params' : ['--script ssl-cert'],
         'parser' : 'parsers.nmap.nmapSSLparse.parse_output'
+    },
+    {
+        'tool' : 'dnsrecon',
+        'image' : 'ddnsrecon:v1',
+        'params' : ['-t std'],
+        'parser' : 'parsers.dnsrecon.dnsreconparse.parse_output'
+    },
+    {
+        'tool' : 'gobuster',
+        'image' : 'dgobuster:v1',
+        'params' : ['-k -q'],
+        'parser' : 'parsers.gobuster.gobusterparse.parse_output'
+    },
+    {
+        'tool' : 'masscan',
+        'image' : 'dmasscan:v1',
+        'params' : [''],
+        'parser' : 'parsers.masscan.masscanparse.parse_output'
     }
     
 ]

@@ -1,5 +1,6 @@
 
 import json
+import parsers.shcheck.patterns as patterns
 
 class shheaders:
     def __init__(self, address, result):
@@ -29,7 +30,7 @@ def parse_output(output):
     for line in output.logs(stream=True):
         data += line.decode("utf-8")
 
-
+   # print(data)
     jsonStr = json.loads(data)
     shchecked_targets = []
     for addr in jsonStr:
@@ -37,7 +38,8 @@ def parse_output(output):
         shchecked_targets.append(next_reccord)
     
     # [0] if shcheck.py is called againts 1 target at a time
-    return shchecked_targets[0] 
+    return (patterns.generate_output(shchecked_targets[0].missing, shchecked_targets[0].address))
+  #  return shchecked_targets[0] 
 
 
     

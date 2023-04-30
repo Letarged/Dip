@@ -1,27 +1,24 @@
 
-
-Zaviesť takýto mapovací súbor:
-
-    tool: nmap (nech sa musí zhodovať s nejakou hodnotu kľúča v "dockerImages.py")
-    option: ['-sn', '...'] (kľudne nech to je pole - aby sa nemuselo robit copy-paste pre nový parameter ktorý má úplne rovnaké parsovanie)
-    parser_path: ktorý súbor ktorá funckia
+- zaviesť "parser error" - chyba ktorá nastala v parseru - nech uživateľ vie že je jeho chyba, že ten extra parser naprogramoval na hovno
 
 
-        -ak program zisti, ze ma spustit kontajner nejakho nastroja s takym parametrom, aky nie je v tejto tabulke definovany, ani to nespusti a skonci chybou
+PARSERY NIE SU HOTOVE !!! tie patterns !!
 
-        - pridať textový tutoriál, ako pridať modul (to znamená buď nový parameter existujúceho nástroja alebo úplne nový nástroj)
-                - (nejake extra kroky v prípade že ide o nový tool kde treba aj nový dockerfile a image )
-                - naprogramovať nový parser
-                - vytvoriť záznam v mapovacej tabuľke opísanej o pár riadkov vyššie 
+Ponúknuť nmap "-A" buď na tie porty, kde nie je známy názov služby, alebo na všetky ktoré sú otvorené
 
-        - zaviesť "parser error" - chyba ktorá nastala v parseru - nech uživateľ vie že je jeho chyba, že ten extra parser naprogramoval na hovno
+Masscaan občas vráti prázdny output a vtedy to je problém
 
-        - ulohou parseru bude po novom aj mať informáciu o tom, čo je považované za potencionálne zaujimavý výsledok v kontexte pentestingu - teda aby mal info o tom že keď nájde toto a toto, má na to upozorniť
-
+Ešte zjednodušiť pridávanie user-modulov. Aby uživateľ nemusel hrabať v kóde (napr teraz by musel zasahovat do scanCoordination a tiez do scanCoordinationAssisant, čo je nepriatelne). Takže všetko cez ďalšie config subory, mapovacie subory a tak. Aby jedine, čo uživateľ musel pridať je záznam v nejakom mapovacom súbore a potom úplne nové python súbory (ako parser a assist a tak.. tieto sa len jednoducho namapuju). JEden z takych mapovacich suborov bude možno:
+    - 
+    - služba: http
+    - assist: /xyz/craft
+    - ja nevieeeeem už, som unaveny
 
 Vypísanie potencionálnych cieľov (možno scoring?)
 
-Pridat SSLSCAN a PTWEBDISCOVER
+Pridat moznost -A na objavene porty (napriklad s číslom 800+)
+
+Pridat SSLSCAN a PTWEBDISCOVER a FTP anon?
 
 Spraviť inštalačný súbor
 

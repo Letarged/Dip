@@ -25,7 +25,7 @@ class port:
         
 
     def __str__(self):
-        return (str(self.num) + " : " + str(self.state) )
+        return (str(self.num) + " : " + str(self.state) + " :: " + str(self.port_service))
 
 class ip:
     def __init__(self, ipaddr, ports=None):

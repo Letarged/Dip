@@ -3,18 +3,17 @@ import configparser # for parsing the configuration file
 from ftplib import FTP
 import importlib
 
-from secondary.dockerimages import images
+# from secondary.dockerimages import images
 from secondary.dockerimages import tools
 
-import parsers.nmap.nmapparse as nmapparse
-import parsers.shcheck.shcheckparse as shcheckparse
-import parsers.cewl.cewlparse as cewlparse
-#import parsers.whatweb.whatwebparse_basic as whatwebparse_basic
-import parsers.masscan.masscanparse as masscanparse
-import parsers.dnsrecon.dnsreconparse as dnsreconparse
-import parsers.gobuster.gobusterparse as gobusterparse
-import parsers.nmap.nmapSSLparse as nmapSSLparse
-import parsers.nmap.nmapdiscoveryparse as nmapdiscoveryparse
+# import parsers.nmap.nmapparse as nmapparse
+# import parsers.shcheck.shcheckparse as shcheckparse
+# import parsers.cewl.cewlparse as cewlparse
+# import parsers.masscan.masscanparse as masscanparse
+# import parsers.dnsrecon.dnsreconparse as dnsreconparse
+# import parsers.gobuster.gobusterparse as gobusterparse
+# import parsers.nmap.nmapSSLparse as nmapSSLparse
+# import parsers.nmap.nmapdiscoveryparse as nmapdiscoveryparse
 
 
 config = configparser.RawConfigParser()
@@ -42,15 +41,19 @@ def divideParserField(txt):
 def getParserAndImage(tool, param):
     for record in tools:
         if record['tool'] == tool and \
-            param in record['params']:
+            (param in record['params'] or \
+                'ANY' in record['params']):
             return record['parser'], record['image']
 
-    exit("Error: not valid tool")
+
+
+    exit("Error: correcponding module does not exist: " + str(tool) + " with the parameter '" + str(param) + "' "    "\
+          \nIt seems like the specified combination of a tool and parameters is not covered in any module. Or maybe just a misspell?")
 
 
 
 
-
+"""
 
 def nmapOpenPortsDiscoverScan(target, nmap_command, debug_on):
     dckr = docker.from_env()
@@ -132,17 +135,6 @@ def dnsreconScan(target):
         output
     )
 
-def dnsreconScan2(command):
-    dckr = docker.from_env()
-    x = dckr.containers.run(
-        images["dnsrecon"], 
-        command,
-        detach = True 
-        )
-    output = dckr.containers.get(x.id)
-    return dnsreconparse.parse_output(
-        output
-    )
 
 
 def nmapSSLScan(target_ip):
@@ -183,23 +175,6 @@ def gobusterScan(target_ip, port):
         output
     )
 
-def gobusterScan2(gobuster_command):
-
-    dckr = docker.from_env()
-
-
-    x = dckr.containers.run(images["gobuster"], 
-                            gobuster_command,
-                            detach = True )
-    
-
-
-    output = dckr.containers.get(x.id)
-   
-
-    return gobusterparse.parse_output(
-        output
-    )
 
 
 def checkForFtpAnon(target_ip):
@@ -207,3 +182,6 @@ def checkForFtpAnon(target_ip):
     resp = ftp.login()
     print(resp)
     exit()
+
+
+"""

@@ -3,10 +3,22 @@ import netifaces
 import ipaddress
 import configparser
 import secondary.scanCoordinationAssistant as assist
+import time
+import threading
 
 settings = configparser.RawConfigParser()
 settings.read('secondary/conf/settings.cfg') 
 
+def display_loading():
+    counter = 0
+    while True:
+        if counter % 6 == 0:
+            print("\rGobuster in progress ", end="")
+        print(".", end="", flush=True)
+        time.sleep(0.9)
+        counter += 1
+        if counter >= 30:
+            break
 
 
 def netmaskToSlash(netmask):
@@ -54,8 +66,40 @@ def gonna_be_scanned(lst, interface, logic):
 
         
     
+def portScanningPhase(targetS, config):
+    doneAtLeastOneScan = False
+    nmap_found_targets = {} 
+    masscan_found_target = {}
+    if config['Nmap'].getboolean('switched_on'):
+        doneAtLeastOneScan = True
+        for target in targetS:
+            nmap_command, param = assist.craftNmapCommand(target, config, settings['NmapOutput']['output'])
+            nmap_found_targets[target] = funcs.launchTheScan("nmap", nmap_command, param)
+            #if debug_on: print("Went for " + str(target) + str(found_targets[target]))
 
-            
+    if config['Masscan'].getboolean('switched_on'):
+        doneAtLeastOneScan = True
+        for target in targetS:
+            masscan_command, param = assist.craftMasscanCommand(target, config, settings['MasscanOutput']['output'])
+            masscan_found_target[target] = funcs.launchTheScan("masscan", masscan_command, param)
+    
+    if not doneAtLeastOneScan:
+        exit("At least one scan must be performed:  nmap / masscan")
+
+    to_s_cim_pracujeme = {**masscan_found_target, **nmap_found_targets}
+
+    for x in list(to_s_cim_pracujeme.keys()):
+        print("LULU: " + str(x))
+        for port in to_s_cim_pracujeme[x].not_closed_not_filtered_ports():
+            print(port)
+
+    #print(str(type(masscan_found_target)))
+    #print(nmap_found_targets[next(iter(nmap_found_targets))])
+   # print(nmap_found_targets['whiskeyprovsechny.cz'])
+   # return(masscan_found_target.update(nmap_found_targets))
+    return {**nmap_found_targets, **masscan_found_target}
+    #exit()
+    # print("THIS: " + str(masscan_found_target.update(nmap_found_targets))) # TODO NAPIČU LEBO NASTANE OVERWRITE (takto to je zatiaľ len ako proforma)
 
 # This is the main function for coordinating type-1-scan
 # It should perform all the steps specified in the confing file, 
@@ -66,59 +110,64 @@ def performScanType1(targetS, debug_on):
     config = configparser.RawConfigParser()
     config.read(settings['Path']['typeoneConf']) 
     
-    temporary_dict = {}
-    for target in targetS:
-        nmap_command, param = assist.craftNmapCommand(target, config, settings['NmapOutput']['output'])
-        temporary_dict[target] = funcs.launchTheScan("nmap", nmap_command, param)
-        #if debug_on: print("Went for " + str(target) + str(temporary_dict[target]))
+    found_targets = portScanningPhase(targetS, config)
 
+    """
+    for target in list(fKazanjian vestibuloplasty and Edlan Mejchar vestibuloplasty are two different surgical techniques used to increase the depth of the oral vestibule, which is the space between the teeth and the cheeks or lips.
 
-    
-    for target in list(temporary_dict.keys()):
-        for interestingport in temporary_dict[target].not_closed_not_filtered_ports():
+Kazanjian vestibuloplasty involves making an incision in the mucosa of the oral vestibule and then deepening the vestibule by creating a space between the mucosa and the underlying bone. This space is then filled with a graft material, such as autogenous or alloplastic materials, to provide support for the mucosa and maintain the increased vestibular depth.
+
+On the other hand, Edlan Mejchar vestibuloplasty involves making incisions at the junction of the attached gingiva and the mucosa of the oral vestibule. These incisions are then extended laterally and vertically to create a flap of mucosa and attached gingiva that is then elevated and repositioned coronally to increase the depth of the vestibule.
+
+Both techniques aim to increase the depth of the vestibule, but they differ in their approach and surgical technique. The choice of technique depends on the individual patient's needs and the surgeon's experience and preference.ound_targets.keys()):
+        print("HERE: " + str(target) + "  :: " + str(found_targets[target]))
+        for interestingport in found_targets[target].not_closed_not_filtered_ports():
             print(str(target) + " - " + str(interestingport.num) + " " + str(interestingport.port_service))
-    
+    """
 
           
-    for target in list(temporary_dict.keys()):
+    for target in list(found_targets.keys()):
         print("-----------------------")
-        for interestingport in temporary_dict[target].not_closed_not_filtered_ports():
+        for interestingport in found_targets[target].not_closed_not_filtered_ports():
             match interestingport.port_service:
                 case "https":
                         if config['Gobuster'].getboolean('switched_on'):
-                            gobuster_command = assist.craftGobusterCommand(temporary_dict[target], interestingport, config)
-                            gobuster_result = funcs.gobusterScan2(gobuster_command)
+                            gobuster_command, params = assist.craftGobusterCommand(found_targets[target], interestingport, config)
+                            loading_thread = threading.Thread(target=display_loading)
+                            loading_thread.start()
+                            gobuster_result = funcs.launchTheScan("gobuster", gobuster_command, params)
+                            loading_thread.join()
                             # print(gobuster_result)
                             print("Gobuster : " + str(gobuster_result)[:50])
 
                         if config['Whatweb'].getboolean('switched_on'):
-                            whatweb_command, params = assist.craftWhatwebCommand(temporary_dict[target], interestingport, config, settings['WhatwebOutput']['output'])
+                            whatweb_command, params = assist.craftWhatwebCommand(found_targets[target], interestingport, config, settings['WhatwebOutput']['output'])
                             whatweb_result=funcs.launchTheScan("whatweb",whatweb_command, params)
                             # print(whatweb_result)
                             print("Whatweb : " + str(whatweb_result)[:50])
 
                         if config['Nmapssl'].getboolean('switched_on'):
-                            nmapssl_command, params = assist.craftNmapSSLCommand(temporary_dict[target], interestingport, config, settings['NmapOutput']['output'])
+                            nmapssl_command, params = assist.craftNmapSSLCommand(found_targets[target], interestingport, config, settings['NmapOutput']['output'])
                             nmapssl_result = funcs.launchTheScan("nmap", nmapssl_command, params) 
                             # print(nmapssl_result)
                             print("Nmapssl : " + str(nmapssl_result)[:50])
 
                         if config['Cewl'].getboolean('switched_on'):
-                            cewl_command, params = assist.craftCewlCommand(temporary_dict[target], interestingport, config)
+                            cewl_command, params = assist.craftCewlCommand(found_targets[target], interestingport, config)
                             cewl_result = funcs.launchTheScan("cewl", cewl_command, params)
                             # print(cewl_result)
                             print("Cewl : " + str(cewl_result)[:20])
 
                         if config['Shcheck'].getboolean('switched_on'):
-                            shcheck_command, params = assist.craftShcheckCommand(temporary_dict[target], interestingport, config, settings['ShcheckOutput']['output'])
+                            """ Following line ensures that shcheck will get https://site.org and not IP address, because in that case shcheck gives an error"""
+                            found_targets[target].address = target
+                            shcheck_command, params = assist.craftShcheckCommand(found_targets[target], interestingport, config, settings['ShcheckOutput']['output'])
                             shcheck_result = funcs.launchTheScan("shcheck", shcheck_command, params)
-                            # print(cewl_result)
-                            print("Shcheck : " + str(shcheck_result))
+                            print(shcheck_result)
                 case "domain":
                         if config['Dnsrecon'].getboolean('switched_on'):
-                            dnsrecon_command = assist.craftDnsreconCommand(temporary_dict[target], interestingport, config, settings['DnsreconOutput']['output'])
-                            print(dnsrecon_command)
-                            dnsrecon_result = funcs.dnsreconScan2(dnsrecon_command)
+                            dnsrecon_command, params = assist.craftDnsreconCommand(found_targets[target], config, settings['DnsreconOutput']['output'])
+                            dnsrecon_result = funcs.launchTheScan("dnsrecon", dnsrecon_command, params)
                             # print(gobuster_result)
                             print("Dnsrecon : " + str(dnsrecon_result)[:50])
                         
