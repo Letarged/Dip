@@ -9,6 +9,14 @@ import threading
 settings = configparser.RawConfigParser()
 settings.read('secondary/conf/settings.cfg') 
 
+def print_banner(address):
+    line = "------- " + address + " -------"
+    line_len = len(line)
+    print("-" * line_len)
+    print(line)
+    print("-" * line_len)
+
+
 def display_loading():
     counter = 0
     while True:
@@ -127,7 +135,8 @@ Both techniques aim to increase the depth of the vestibule, but they differ in t
 
           
     for target in list(found_targets.keys()):
-        print("-----------------------")
+        print_banner(target)
+
         for interestingport in found_targets[target].not_closed_not_filtered_ports():
             match interestingport.port_service:
                 case "https":
@@ -144,7 +153,7 @@ Both techniques aim to increase the depth of the vestibule, but they differ in t
                             whatweb_command, params = assist.craftWhatwebCommand(found_targets[target], interestingport, config, settings['WhatwebOutput']['output'])
                             whatweb_result=funcs.launchTheScan("whatweb",whatweb_command, params)
                             # print(whatweb_result)
-                            print("Whatweb : " + str(whatweb_result)[:50])
+                            print("Whatweb : " + str(whatweb_result))
 
                         if config['Nmapssl'].getboolean('switched_on'):
                             nmapssl_command, params = assist.craftNmapSSLCommand(found_targets[target], interestingport, config, settings['NmapOutput']['output'])
@@ -159,17 +168,23 @@ Both techniques aim to increase the depth of the vestibule, but they differ in t
                             print("Cewl : " + str(cewl_result)[:20])
 
                         if config['Shcheck'].getboolean('switched_on'):
-                            """ Following line ensures that shcheck will get https://site.org and not IP address, because in that case shcheck gives an error"""
-                            found_targets[target].address = target
-                            shcheck_command, params = assist.craftShcheckCommand(found_targets[target], interestingport, config, settings['ShcheckOutput']['output'])
-                            shcheck_result = funcs.launchTheScan("shcheck", shcheck_command, params)
+                            try:
+                                """ Following line ensures that shcheck will get https://site.org and not IP address, because in that case shcheck gives an error"""
+                                found_targets[target].address = target
+                                shcheck_command, params = assist.craftShcheckCommand(found_targets[target], interestingport, config, settings['ShcheckOutput']['output'])
+                                shcheck_result = funcs.launchTheScan("shcheck", shcheck_command, params)
+                            except:
+                                shcheck_result = ""
                             print(shcheck_result)
+
                 case "domain":
                         if config['Dnsrecon'].getboolean('switched_on'):
                             dnsrecon_command, params = assist.craftDnsreconCommand(found_targets[target], config, settings['DnsreconOutput']['output'])
                             dnsrecon_result = funcs.launchTheScan("dnsrecon", dnsrecon_command, params)
-                            # print(gobuster_result)
-                            print("Dnsrecon : " + str(dnsrecon_result)[:50])
+                            print(str(dnsrecon_result))
+                            dnsrecon_command, params = assist.craftDnsReverseLookupCommand(found_targets[target], config, settings['DnsreconOutput']['output'])
+                            dnsrecon_result = funcs.launchTheScan("dnsrecon", dnsrecon_command, params)
+                            print(str(dnsrecon_result))
                         
 def performScanType0(scan_after_discovery, debug_on):
     

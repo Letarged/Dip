@@ -3,6 +3,38 @@ from urllib.parse import urlparse
 import socket
 import classes
 
+def ip_to_range(ip):
+    """
+    Converts an IPv4 address to an IP range of 2 IPs, starting with the given IP
+    and ending with the IP which is plus one. For example 8.8.8.8-8.8.8.9
+    
+    Args:
+    - ip (str or int): the IPv4 address to convert
+    
+    Returns:
+    - range_str (str): the IP range as a string
+    """
+    # Convert the IP to a string if it's an integer
+    if isinstance(ip, int):
+        ip = str(ip)
+    
+    # Split the IP into its four parts
+    parts = ip.split('.')
+    
+    # Convert each part to an integer
+    parts = [int(part) for part in parts]
+    
+    # Increment the last part of the IP
+    parts[-1] += 1
+    
+    # Convert each part back to a string
+    parts = [str(part) for part in parts]
+    
+    # Join the parts back together with dots to form the IP range
+    range_str = ip + '-' + '.'.join(parts)
+    
+    return range_str
+
 
 def check_ip_or_url(value):
     try:
@@ -108,6 +140,7 @@ def craftDnsreconCommand(target, config, output_format):
         dns_target = socket.gethostbyaddr(target.address)[0]
     elif check_ip_or_url(target.address) == "url":
         dns_target = target.address
+        
 
     command = (
         output_format +
@@ -119,19 +152,39 @@ def craftDnsreconCommand(target, config, output_format):
     )
     return command, config['Dnsrecon']['params']
 
+def craftDnsReverseLookupCommand(target, config, output_format):
+
+    if check_ip_or_url(target.address) == "ip":
+        dns_target = target.address
+    elif check_ip_or_url(target.address) == "url":
+        dns_target = socket.gethostbyname(target.address)[0]
+        
+    dns_target = ip_to_range(dns_target)
+
+
+    command = (
+        output_format +
+        " " +
+       # config['Dnsrecon']['params'] +
+        " " +
+        " -r " +
+        str(dns_target)
+    )
+    return command, '-r'
+
+
 
 def craftShcheckCommand(target, port, config, output_format):
     
     shcheck_target = getFullUrl(target, port, 0)
     command = (
         output_format +
-        " " +
+        " -d " +
         config['Shcheck']['params'] +
         " -p" + str(port.num) +
         " " +
         shcheck_target
     )
-   
     return command, config['Shcheck']['params']
 
 

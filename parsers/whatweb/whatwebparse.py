@@ -1,5 +1,20 @@
 import json 
+from termcolor import colored
 
+
+def extract_info_from_json(data):
+    output = ''
+    for record in data:
+        if record['http_status'] == 200:
+            output += 'Target: ' + colored(record['target'], 'green') + '\n'
+            output += 'IP: ' + colored(record['plugins']['IP']['string'][0], 'yellow') + '\n'
+            output += 'Country: ' + colored(record['plugins']['Country']['module'][0], 'magenta') + '\n'
+            output += 'Email: ' + colored(record['plugins'].get('Email', {'string': ['']})['string'][0], 'cyan') + '\n'
+            output += 'JQuery: ' + colored(record['plugins'].get('JQuery', {'version': ['']})['version'][0], 'blue') + '\n'
+            output += 'Uncommon headers: ' + colored(', '.join(record['plugins'].get('UncommonHeaders', {'string': ['']})['string']), 'red') + '\n'
+            output += 'X-Frame-Options: ' + colored(record['plugins'].get('X-Frame-Options', {'string': ['']})['string'][0], 'green') + '\n'
+            output += '\n'
+    return output
 
 
 def parse_output_basic(output):
@@ -18,5 +33,5 @@ def parse_output_basic(output):
    # print(jsonStr[0]["target"])
    # print(jsonStr[1]["target"])
     
-    return jsonStr
+    return extract_info_from_json(jsonStr)
 

@@ -18,34 +18,39 @@ import time
 debug_on = False
 start_time = time.time()
 
+def main():
+    scanType, targetS = argParser.process_cmd_arguments(debug_on)
 
-scanType, targetS = argParser.process_cmd_arguments(debug_on)
 
+    """
+
+    Different meaning of "scanType" variable:
+
+        targetS == []  ->   scanType determins what's happening AFTER potentional targets are discovered
+        targetS != []  ->   scanType determins wheter we are running scan1 or scan2 on the given targets
+
+    """
+
+    if targetS == []:
+        scanCoordination.performScanType0(scanType, debug_on)
+    else:
+        match scanType:
+            case '1':
+                scanCoordination.performScanType1(targetS, debug_on)
+            case '2':
+                scanCoordination.performScanType2(targetS, debug_on)
+            case _:
+                print("Incorrect place in the multiverse.")
+
+    end_time = time.time()
+    print("\nDone in " + str("{:.4f}".format(end_time - start_time)) + " seconds.")
+
+    exit()
+
+if __name__ == '__main__':
+    main()
 
 """
-
-Different meaning of "scanType" variable:
-
-    targetS == []  ->   scanType determins what's happening AFTER potentional targets are discovered
-    targetS != []  ->   scanType determins wheter we are running scan1 or scan2 on the given targets
-
-"""
-if targetS == []:
-    scanCoordination.performScanType0(scanType, debug_on)
-else:
-    match scanType:
-        case '1':
-            scanCoordination.performScanType1(targetS, debug_on)
-        case '2':
-            scanCoordination.performScanType2(targetS, debug_on)
-        case _:
-            print("Incorrect place in the multiverse.")
-
-end_time = time.time()
-print("\nDone in " + str("{:.4f}".format(end_time - start_time)) + " seconds.")
-
-exit()
-
 for x in target_addr.not_closed_not_filtered_ports():
     match x.num:
 
@@ -56,13 +61,11 @@ for x in target_addr.not_closed_not_filtered_ports():
 
         case 443:
             print("It's 443")
-            """    
-            # class ip, class port
             sh_result = funcs.shcheckScan(target_addr, x) 
             print("Missing: " + str(sh_result[0].missing))
             cewl_result = funcs.cewlScan(target_addr, x) # TODO možno zbytočne dávať port ako argument? To isté aj v ostatných prípadoch?
             print("Cewl first 10: " + str(cewl_result[:10]))
-            """
+        
            # whatweb_result = funcs.whatwebScan(target_addr)
            # masscan_result = funcs.masscanScan(target_addr)
             #print(masscan_result)
@@ -83,7 +86,7 @@ for x in target_addr.not_closed_not_filtered_ports():
 
 
 
-""" Toto asi nič 
+ Toto asi nič 
 
 for x in target_list.ports:
     if x.state == "open":

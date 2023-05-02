@@ -10,7 +10,7 @@ def parse_output(output):
     data = ""
     for line in output.logs(stream=True):
         data += line.decode("utf-8")
-    print(data)
+   # print(data)
     pattern = r".*\(Status:\s.*"
     
     tmp = data.split('\n')

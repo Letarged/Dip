@@ -52,6 +52,12 @@ tools = [
         'params' : ['-t std'],
         'parser' : 'parsers.dnsrecon.dnsreconparse.parse_output'
     },
+ {
+        'tool' : 'dnsrecon',
+        'image' : 'ddnsrecon:v1',
+        'params' : ['-r'],
+        'parser' : 'parsers.dnsrecon.dnsreverseparse.parse_output'
+    },
     {
         'tool' : 'gobuster',
         'image' : 'dgobuster:v1',

@@ -30,7 +30,7 @@ def parse_output(output):
     for line in output.logs(stream=True):
         data += line.decode("utf-8")
 
-   # print(data)
+    #print(data)
     jsonStr = json.loads(data)
     shchecked_targets = []
     for addr in jsonStr:

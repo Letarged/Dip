@@ -4,6 +4,14 @@
 
 PARSERY NIE SU HOTOVE !!! tie patterns !!
 
+TRY EXCEPT VO VSETKYCH CODE EXECUTIONS
+
+ZORADIT TESTY TAK ABY SA VYPISOVALI V ROZUMNOM PORADI, TAKZE ASI WHATWEB (KTORY DAVA VSEOBECNE INFO) POJDE PRVY ZE (SAMOZREJME NEMUSIA BYT VSETKY VECI NA switched_on=1) ALE AJ TAK
+
+GOBUSTER STRŠNE NEFUNGUJE !!
+
+VYMAZAť PODOZRIVO UHLADNE KOMENTARE DOKUMENTOVANE FUNKCIE
+
 Ponúknuť nmap "-A" buď na tie porty, kde nie je známy názov služby, alebo na všetky ktoré sú otvorené
 
 Masscaan občas vráti prázdny output a vtedy to je problém
@@ -18,7 +26,7 @@ Vypísanie potencionálnych cieľov (možno scoring?)
 
 Pridat moznost -A na objavene porty (napriklad s číslom 800+)
 
-Pridat SSLSCAN a PTWEBDISCOVER a FTP anon?
+Pridat !!SSLSCAN!! a PTWEBDISCOVER a FTP anon?
 
 Spraviť inštalačný súbor
 
