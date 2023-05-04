@@ -1,0 +1,13 @@
+setup.py
+MasterThesis.egg-info/PKG-INFO
+MasterThesis.egg-info/SOURCES.txt
+MasterThesis.egg-info/dependency_links.txt
+MasterThesis.egg-info/entry_points.txt
+MasterThesis.egg-info/requires.txt
+MasterThesis.egg-info/top_level.txt
+src/__init__.py
+src/argParser.py
+src/classes.py
+src/funcs.py
+src/p.py
+src/scanCoordination.py
