@@ -16,8 +16,7 @@ def nmap_output_proccess(jsonStr):
 
   # if all the scanned ports are closed
   if "port" not in jsonStr["nmaprun"]["host"]["ports"]:
-    print("HEREEEEEEEEEEE")
-    return []
+    return None, target_ip_address
 
   # in case of exactly 1 open port (we need it to be an array of 1 element, not just that 1 element)
   if isinstance(jsonStr["nmaprun"]["host"]["ports"]["port"], dict):
@@ -31,8 +30,8 @@ def nmap_output_proccess(jsonStr):
       one_port = classes.port(int(i["@portid"]),i["state"]["@state"],i["service"]["@name"] )
       tmp.append(one_port)
 
-  print("TMP: " + str(tmp))
-  print("TARGET IP ADDRESS: " + str(target_ip_address))
+ # print("TMP: " + str(tmp))
+  #print("TARGET IP ADDRESS: " + str(target_ip_address))
   return tmp ,target_ip_address
 
 # bude sa musieť upraviť, lebo nie všetky nástroje majú xmlko ako nmap
@@ -53,7 +52,7 @@ def parse_output(output):
     jsonStr = json.loads(data)
     if n_hosts_up(jsonStr) == 0:
       return None
-    print("Hosts up: " + str(n_hosts_up(jsonStr)))
     tmp, target_ip = nmap_output_proccess(jsonStr)
+
     return classes.ip(target_ip, tmp)
     

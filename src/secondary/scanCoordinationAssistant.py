@@ -235,7 +235,6 @@ def craftNmapCommand(target, config, output_format):
 
 
     )
-    print(nmap_command)
     return nmap_command, config['Nmap']['params']
 
 
