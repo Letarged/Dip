@@ -23,9 +23,12 @@ tools = [
         'parser' : 'parsers.whatweb.whatwebparse.parse_output_basic'
     },
     {
+        'identifier' : 'Shcheck_basic',
         'tool' : 'shcheck',
         'image' : 'dshcheck:v1',
-        'params' : [''], # no parameters
+        'service' : 'https',
+        'params' : '', # no parameters
+        'core' : 'cores.shcheck.shckech_core.run', 
         'parser' : 'parsers.shcheck.shcheckparse.parse_output'
     },
     {
@@ -35,9 +38,13 @@ tools = [
         'parser' : 'parsers.nmap.nmapdiscoveryparse.parse_output'
     },
     {
+        
+        'identifier' : 'Nmap_ports_basic',
         'tool' : 'nmap',
         'image' : 'dnmap:v1',
-        'params' : ['-sS'],
+        'service' : 'ANY',
+        'params' : '-sS',
+        'core' : 'cores.nmap.nmap_core.run', 
         'parser' : 'parsers.nmap.nmapparse.parse_output'
     },
     {
@@ -72,3 +79,32 @@ tools = [
     }
     
 ]
+
+modules = {
+    # 'Nmap' : {},
+    # 'Nmap' : {
+    #     'tool' : 'nmap',
+    #     'image' : 'dnmap:v1',
+    #     'service' : 'ANY',
+    #     'params' : '-sS', # no parameters
+    #     'core' : 'cores.nmap.nmap_core.run', 
+    #     'parser' : 'parsers.nmap.nmapparse.parse_output'
+    # },
+    'Shcheck_basic' : {
+        'tool' : 'shcheck',
+        'image' : 'dshcheck:v1',
+        'service' : 'https',
+        'params' : '-d', # disable SSL chceck
+        'core' : 'cores.shcheck.shckech_core.run', 
+        'parser' : 'parsers.shcheck.shcheckparse.parse_output'
+    },
+    'Whatweb' : {
+        'tool' : 'whatweb',
+        'image' : 'dwhatweb:v1',
+        'service' : 'https',
+        'params' : '-a1',
+        'core' : 'cores.whatweb.whatweb_core.run',
+        'parser' : 'parsers.whatweb.whatwebparse.parse_output_basic'
+
+    }
+}

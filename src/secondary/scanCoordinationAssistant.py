@@ -217,7 +217,7 @@ def craftHostDiscoveryNmapCommand(target, config, output_format):
 
 
 def craftNmapCommand(target, config, output_format):
-    ports_to_scan = config['Nmap']['ports']
+    ports_to_scan = config['Nmap_s']['ports']
 
     # if "--top-ports 10" is specified, leave it like that
     # but if "21,22,80,443,8080" is specified, we need to add "-p" prefix for nmap
@@ -227,7 +227,7 @@ def craftNmapCommand(target, config, output_format):
     nmap_command = (
         output_format +
         " " +
-        config['Nmap']['params'] +
+        config['Nmap_s']['params'] +
         " " +
         ports_to_command +
         " " +
@@ -235,7 +235,7 @@ def craftNmapCommand(target, config, output_format):
 
 
     )
-    return nmap_command, config['Nmap']['params']
+    return nmap_command, config['Nmap_s']['params']
 
 
 def craftMasscanCommand(target, config, output_format):

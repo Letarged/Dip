@@ -1,5 +1,2 @@
 youtube.com
-facebook.com
-google.com
 8.8.8.8
-dns.google

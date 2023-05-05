@@ -8,6 +8,8 @@ import threading
 import os
 import sys
 from termcolor import colored
+from secondary import dockerimages
+import importlib
 
 settings = configparser.RawConfigParser()
 settings.read('secondary/conf/settings.cfg') 
@@ -20,6 +22,46 @@ def print_banner(address):
     print(line)
     print("-" * line_len)
 
+# also excludes "..._" so for example Masscan And Nmap since that's a whole different cattegory and architectural approach
+# also checks if there is a record in modules (dockerImages)
+# if not BUT NOT SWITCHED_ON -> warning
+# if not AND TRIED TO USE -> error
+def get_switched_on(config):
+    # enabled_sections = []
+    # for section in config.sections():
+    #     print(section)
+    #     not_eixsting = False
+    #     if not module_exists(section):
+    #         not_eixsting = True
+    #         sys.stderr.write("Warning: module \"" + str(section) + "\" is in config file but not defined (no record)." "\n")
+    #     if config.getint(section, 'switched_on') == 1:
+    #         if not_eixsting: 
+    #             exit_code = 128
+    #             sys.exit("Error {}: module \"{}\" switched on but not defined (no record).".format(exit_code, section))
+    #         enabled_sections.append(section)
+
+
+    enabled_sections = []
+    for section in config.sections():
+        if section[-2:] == '_s': continue # "nmap_s" and "masscan_s" will be ignored
+        if not module_exists(section):
+            not_eixsting = True
+        else:
+            not_eixsting = False
+
+        
+        if not_eixsting:
+            if config.getint(section, 'switched_on') == 1:
+                exit_code = 128
+                sys.exit("Error {}: module \"{}\" switched on but not defined (no record).".format(exit_code, section))
+            else:
+          #      sys.stderr.write("Warning: module \"" + str(section) + "\" is in config file but not defined (no record)." "\n")
+                pass
+        else:
+            if config.getint(section, 'switched_on') == 1:
+                enabled_sections.append(section)
+                
+    return enabled_sections
 
 def display_loading():
     counter = 0
@@ -75,21 +117,24 @@ def gonna_be_scanned(lst, interface, logic):
                 return True
         return False
     
-
-        
+def module_exists(module_from_config):
+    if module_from_config in dockerimages.modules.keys():
+        return True
+    else:
+        return False
     
 def portScanningPhase(targetS, config):
     doneAtLeastOneScan = False
     nmap_found_targets = {} 
     masscan_found_target = {}
-    if config['Nmap'].getboolean('switched_on'):
+    if config['Nmap_s'].getboolean('switched_on'):
         doneAtLeastOneScan = True
         for target in targetS:
             nmap_command, param = assist.craftNmapCommand(target, config, settings['NmapOutput']['output'])
             nmap_found_targets[target] = funcs.launchTheScan("nmap", nmap_command, param)
             #if debug_on: print("Went for " + str(target) + str(found_targets[target]))
 
-    if config['Masscan'].getboolean('switched_on'):
+    if config['Masscan_s'].getboolean('switched_on'):
         doneAtLeastOneScan = True
         for target in targetS:
             masscan_command, param = assist.craftMasscanCommand(target, config, settings['MasscanOutput']['output'])
@@ -117,21 +162,62 @@ def portScanningPhase(targetS, config):
 # It should perform all the steps specified in the confing file, 
 #       one after antoher, adjusting the steps according 
 #       to the results from initial nmap ports discovery
+def divideField(txt):
+    path = txt.rsplit(".",1)[0]
+    func = txt.rsplit(".",1)[1]
+    return path, func
+
+def service_check(module_service, real_services):
+    if module_service == 'ANY' or module_service in real_services:
+        return True
+    else:
+        return False
+
 def performScanType1(targetS, debug_on):
 
     config = configparser.RawConfigParser()
     config.read(settings['Path']['typeoneConf']) 
     
+    
+    switched_ons = get_switched_on(config)
     found_targets = portScanningPhase(targetS, config)
+    # for target in list(found_targets.keys()):
+    #     print("HERE: " + str(target) + "  :: " + str(found_targets[target]))
+    #     for interestingport in found_targets[target].not_closed_not_filtered_ports():
+    #         print(str(target) + " - " + str(interestingport.num) + " " + str(interestingport.port_service))
+    
+    print(switched_ons)
+    
 
-    """
     for target in list(found_targets.keys()):
-        print("HERE: " + str(target) + "  :: " + str(found_targets[target]))
-        for interestingport in found_targets[target].not_closed_not_filtered_ports():
-            print(str(target) + " - " + str(interestingport.num) + " " + str(interestingport.port_service))
-    """
+        print_banner(target)
+        if (found_targets[target] == None):
+            print(colored("..probably down", 'red'))
+            continue
+        for switched_on_module in switched_ons:
+            print("Going for: " + str(switched_on_module))
+            ports = [p for p in found_targets[target].not_closed_not_filtered_ports()]
 
-          
+            for open_port in ports:
+
+            #services = [x.port_service for x in ports]
+            #print(switched_on_module)
+            #print(str(dockerimages.modules[switched_on_module]))
+                if (dockerimages.modules[switched_on_module]['service'] == open_port.port_service):
+                    path_of_parser, main_func_inside_module = divideField(dockerimages.modules[switched_on_module]['core'])
+                    correctModule = importlib.import_module(path_of_parser)
+                    getattr(
+                        correctModule, 
+                        main_func_inside_module
+                        )(
+                            target,
+                            open_port, 
+                            switched_on_module, 
+                            dockerimages.modules[switched_on_module]['params']
+                        )
+
+    return
+        
     for target in list(found_targets.keys()):
         print_banner(target)
        

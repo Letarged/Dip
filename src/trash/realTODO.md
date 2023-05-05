@@ -1,3 +1,11 @@
+TO CHATGTP:
+    - I need to auto-generate documentation for my python framework. Give me step-by-step tutorial what comments (in what formats) I need to write in order to generate best documentation. Also, the documentation must have list of error codes explained, include this to your tutorial.
+
+
+CHATGPT: Mam "config" v configparsru, ako spravit "for each [Category]?"
+Toto implementovat do "scanCoordination"
+Shcheck by sa mal proste sputit a vypisať svoj vystup (bez navratovej hodnoty)
+
 
 - zaviesť "parser error" - chyba ktorá nastala v parseru - nech uživateľ vie že je jeho chyba, že ten extra parser naprogramoval na hovno
 
