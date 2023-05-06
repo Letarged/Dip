@@ -42,7 +42,6 @@ def run(target,port, modulename, params):
     output_format='--json-output'
     """ Following line ensures that shcheck will get https://site.org and not IP address, because in that case shcheck gives an error"""
     shcheck_command = craftShcheckCommand(target, port, params, output_format)
-    print(shcheck_command)
     shcheck_result = launchTheScan(
         modules[modulename], 
         shcheck_command, 

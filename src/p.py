@@ -14,12 +14,22 @@ from secondary.dockerimages import images
 import argParser 
 import scanCoordination
 import time 
+import socket
 
+def check_connected():
+    try:
+        # connect to the Google DNS server
+        socket.create_connection(("8.8.8.8", 53))
+        return True
+    except:
+        sys.stderr.write("Warning: It seem like there is some issue with the internet connection.")
+    return False
 
 debug_on = False
 start_time = time.time()
 
 def main():
+    check_connected()
     scanType, targetS = argParser.process_cmd_arguments(debug_on)
 
 

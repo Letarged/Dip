@@ -91,7 +91,6 @@ modules = {
     #     'parser' : 'parsers.nmap.nmapparse.parse_output'
     # },
     'Shcheck_basic' : {
-        'tool' : 'shcheck',
         'image' : 'dshcheck:v1',
         'service' : 'https',
         'params' : '-d', # disable SSL chceck
@@ -99,12 +98,47 @@ modules = {
         'parser' : 'parsers.shcheck.shcheckparse.parse_output'
     },
     'Whatweb' : {
-        'tool' : 'whatweb',
         'image' : 'dwhatweb:v1',
         'service' : 'https',
         'params' : '-a1',
         'core' : 'cores.whatweb.whatweb_core.run',
         'parser' : 'parsers.whatweb.whatwebparse.parse_output_basic'
 
+    },
+    'Dnsrecon' : {
+        'image' : 'ddnsrecon:v1',
+        'service' : 'domain',
+        'params' : '-t std',
+        'core' : 'cores.dnsrecon.dnsrecon_cl.run',
+        'parser' : 'parsers.dnsrecon.dnsreconparse.parse_output'
+     } ,
+    'Dnsrecon_reverse' : {
+        'image' : 'ddnsrecon:v1',
+        'service' : 'domain',
+        'params' : '', # there is parameter '-r' which is hardcoded
+        'core' : 'cores.dnsrecon.dnsrecon_rev.run',
+        'parser' : 'parsers.dnsrecon.dnsreverseparse.parse_output'
+    },
+    'Cewl' : {
+        'image' : 'dcewl:v1',
+        'service' : 'https',
+        'params' : '', # no parameters
+        'core' : 'cores.cewl.cewl_core.run',
+        'parser' : 'parsers.cewl.cewlparse.parse_output',
+        'outputfile' : '/home/kali/Templates/out.txt'
+    },
+    'NmapSSL' : {
+        'image' : 'dnmap:v1',
+        'service' : 'https',
+        'params' : '--script ssl-cert',
+        'core' : 'cores.nmap.nmapssl.run',
+        'parser' : 'parsers.nmap.nmapSSLparse.parse_output'
+    },
+    'Sslscan' : {
+        'image' : 'dsslscan:v1',
+        'service' : 'https',
+        'params' : '--xml=-',
+        'core' : 'cores.sslscan.sslscan_core.run',
+        'parser' : 'parsers.sslscan.sslscanparse.parse_output'
     }
 }

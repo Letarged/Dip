@@ -18,8 +18,7 @@ def parse_output(output):
         data += line.decode("utf-8")
     data = data.split("[*]", 1)[0]
 
-   
-
+    # print("DATA: " + str(data))
     jsonStr = json.loads(data)
 
     return extract_ptr_records(jsonStr)
