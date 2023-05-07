@@ -17,6 +17,8 @@ TRY EXCEPT VO VSETKYCH CODE EXECUTIONS
 
 ZORADIT TESTY TAK ABY SA VYPISOVALI V ROZUMNOM PORADI, TAKZE ASI WHATWEB (KTORY DAVA VSEOBECNE INFO) POJDE PRVY ZE (SAMOZREJME NEMUSIA BYT VSETKY VECI NA switched_on=1) ALE AJ TAK
 
+SPRAVIŤ ANALÝZU HLUČNOTI NÁSTROJA V NEJAKEJ VURTUAKE S INSTRUSION DET.SYS. A TAK, TO JE FAJN NAPAD NIE?
+
 GOBUSTER STRŠNE NEFUNGUJE !!
 
 VYMAZAť PODOZRIVO UHLADNE KOMENTARE DOKUMENTOVANE FUNKCIE
@@ -37,4 +39,12 @@ Spraviť inštalačný súbor
 Ošetrenie nevalidných vstupov (do nejakej miery)
 
 Vložiť možnosti proxy 
+
+
+Towards the end:
+    - remove all debug prints
+    - remove all unnecessary comments
+    - well document the code and generate documentation with the chatgpt request at the beggining of this doc
+Testing:
+     - not standart port (nappríklad pre HTTPS)
 

@@ -4,11 +4,11 @@ from cores.helper import getFullUrl_from_URI
 from termcolor import colored
 
 def craftSSLSCANCommand(target, port, params):
-    cewl_target = getFullUrl_from_URI(target, port, 1)
+    ssl_target = getFullUrl_from_URI(target, port, 1)
     command = (
         params + 
         " " + 
-        target #+ 
+        ssl_target #+ 
        # " -w " +
         #outputfile
     )
