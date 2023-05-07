@@ -36,9 +36,7 @@ setup(
         'docker==2.0.0',
         'netifaces==0.11.0',
         'termcolor==2.3.0',
-        'xmltodict==0.12.0',
-        'ftplib'
-        
+        'xmltodict==0.12.0',        
     ],
     entry_points={
         'console_scripts': [
