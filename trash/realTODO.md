@@ -11,7 +11,7 @@ Shcheck by sa mal proste sputit a vypisať svoj vystup (bez navratovej hodnoty)
 
 NECH SA TO MOZE PISAT AJ DO FILU AKOZE RECORD ZO SKANU 
 
-PARSERY NIE SU HOTOVE !!! tie patterns !!
+PARSERY NIE SU HOTOVE !!! tie patterns !!address
 
 TRY EXCEPT VO VSETKYCH CODE EXECUTIONS
 
@@ -23,7 +23,7 @@ GOBUSTER STRŠNE NEFUNGUJE !!
 
 VYMAZAť PODOZRIVO UHLADNE KOMENTARE DOKUMENTOVANE FUNKCIE
 
-Ponúknuť nmap "-A" buď na tie porty, kde nie je známy názov služby, alebo na všetky ktoré sú otvorené
+Ponúknuť nmap "-A" buď na tie porty, kde nie je znáaddressmy názov služby, alebo na všetky ktoré sú otvorené
 
 Masscaan občas vráti prázdny output a vtedy to je problém
 
@@ -35,6 +35,8 @@ Pridat moznost -A na objavene porty (napriklad s číslom 800+)
 Pridat !!SSLSCAN!! a PTWEBDISCOVER a FTP anon?
 
 Spraviť inštalačný súbor
+
+Zmeniť názov a koncept ohľadom "typeone.cfg" lebo ičividne nič ako type 2 nebude :D s tým sa viaže aj možnost DISC -c1
 
 Ošetrenie nevalidných vstupov (do nejakej miery)
 

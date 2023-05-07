@@ -140,5 +140,13 @@ modules = {
         'params' : '--xml=-',
         'core' : 'cores.sslscan.sslscan_core.run',
         'parser' : 'parsers.sslscan.sslscanparse.parse_output'
+    },
+    'Gobuster' : {
+        'image' : 'dgobuster:v1',
+        'service' : 'https',
+        'params' : '-k -q',
+        'core' : 'cores.gobuster.gobuster_core.run',
+        'parser' : 'parsers.gobuster.gobusterparse.parse_output',
+        'wordlist' : 'common.txt'
     }
 }
