@@ -38,6 +38,8 @@ Spraviť inštalačný súbor
 
 Zmeniť názov a koncept ohľadom "typeone.cfg" lebo ičividne nič ako type 2 nebude :D s tým sa viaže aj možnost DISC -c1
 
+Zaviesť systém erros .. pokryť ich aby to neboli len random chyby z pythonu
+
 Ošetrenie nevalidných vstupov (do nejakej miery)
 
 Vložiť možnosti proxy 

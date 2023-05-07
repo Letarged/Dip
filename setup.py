@@ -37,6 +37,7 @@ setup(
         'netifaces==0.11.0',
         'termcolor==2.3.0',
         'xmltodict==0.12.0',
+        'ftplib'
         
     ],
     entry_points={

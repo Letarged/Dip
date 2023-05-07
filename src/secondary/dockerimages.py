@@ -148,5 +148,11 @@ modules = {
         'core' : 'cores.gobuster.gobuster_core.run',
         'parser' : 'parsers.gobuster.gobusterparse.parse_output',
         'wordlist' : 'common.txt'
+    },
+    'ftpAnonLogin' :{
+        'image' : 'NONE',
+        'service' : 'ftp',
+        'core' : 'cores.ftpanon.ftpanon_core.run',
+        'params' :''
     }
 }

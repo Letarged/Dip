@@ -205,6 +205,9 @@ def performScanType1(targetS, debug_on):
             #print(str(dockerimages.modules[switched_on_module]))
                 if (dockerimages.modules[switched_on_module]['service'] == open_port.port_service):
                     path_of_parser, main_func_inside_module = divideField(dockerimages.modules[switched_on_module]['core'])
+                    if main_func_inside_module == 'NONE':
+                        print("NO DOCKER RUN FOR: " + str(main_func_inside_module))
+                        continue
                     correctModule = importlib.import_module(path_of_parser)
                     getattr(
                         correctModule, 
