@@ -6,6 +6,8 @@ CHATGPT: Mam "config" v configparsru, ako spravit "for each [Category]?"
 Toto implementovat do "scanCoordination"
 Shcheck by sa mal proste sputit a vypisať svoj vystup (bez navratovej hodnoty)
 
+ked hodim do programu "https://..daco.cz/" tak to nmap nespracuje, kedze asi nemozem davat protokol (https) na vstup nmapu
+
 
 - zaviesť "parser error" - chyba ktorá nastala v parseru - nech uživateľ vie že je jeho chyba, že ten extra parser naprogramoval na hovno
 
