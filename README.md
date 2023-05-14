@@ -18,3 +18,14 @@ def get_robots_txt(target):
     return result
 
 print(get_robots_txt('http://192.168.0.206/bWAPP'))
+
+
+
+'robots' : {
+        'image' : None,
+        'service' : 'http',
+        'params' : '', 
+        'additional' : '/home/ubuntu/newmod/func.robots_additional',
+        'command' : '/home/ubuntu/newmod/func.cmd',
+        'parser' : '/home/ubuntu/newmod/func.parse',
+    },
